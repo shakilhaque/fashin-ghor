@@ -1,0 +1,30 @@
+{
+  "name": "ecommerce-platform",
+  "private": true,
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "db:generate": "pnpm --filter @ecommerce/api exec prisma generate",
+    "db:migrate": "pnpm --filter @ecommerce/api exec prisma migrate dev",
+    "db:push": "pnpm --filter @ecommerce/api exec prisma db push",
+    "db:seed": "pnpm --filter @ecommerce/api exec ts-node prisma/seed.ts",
+    "db:studio": "pnpm --filter @ecommerce/api exec prisma studio"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

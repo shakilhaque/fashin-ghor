@@ -4,10 +4,10 @@ export function organizationSchema(siteUrl: string): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'LuxeMode',
+    name: 'Fashion Ghor',
     url: siteUrl,
     logo: `${siteUrl}/logo.png`,
-    description: 'Discover premium fashion with LuxeMode — your destination for curated style.',
+    description: 'Discover premium fashion with Fashion Ghor — your destination for curated style.',
     sameAs: [],
   };
 }
@@ -70,7 +70,7 @@ export function articleSchema(
     author: { '@type': 'Person', name: post.author.name },
     publisher: {
       '@type': 'Organization',
-      name: 'LuxeMode',
+      name: 'Fashion Ghor',
       logo: { '@type': 'ImageObject', url: `${siteUrl}/logo.png` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },

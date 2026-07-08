@@ -23,20 +23,20 @@ const siteUrl = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
 
 export const metadata: Metadata = {
   title: {
-    default: 'LuxeMode — Premium Fashion',
-    template: '%s | LuxeMode',
+    default: 'Fashion Ghor — Premium Fashion',
+    template: '%s | Fashion Ghor',
   },
-  description: 'Discover premium fashion with LuxeMode — your destination for curated style.',
+  description: 'Discover premium fashion with Fashion Ghor — your destination for curated style.',
   metadataBase: new URL(siteUrl),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'LuxeMode',
+    siteName: 'Fashion Ghor',
     url: siteUrl,
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@LuxeMode',
+    site: '@FashionGhor',
   },
   robots: {
     index: true,

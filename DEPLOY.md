@@ -1,4 +1,4 @@
-# LuxeMode — Deployment Guide
+# Fashion Ghor — Deployment Guide
 
 ## Option A: Docker Compose (Recommended)
 

@@ -6,7 +6,7 @@ import { AppModule } from '../src/app.module';
 import { GlobalExceptionFilter } from '../src/common/filters/http-exception.filter';
 import { ResponseInterceptor } from '../src/common/interceptors/response.interceptor';
 
-describe('LuxeMode API (e2e)', () => {
+describe('Fashion Ghor API (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {

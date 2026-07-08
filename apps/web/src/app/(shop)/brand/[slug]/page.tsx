@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!brand) return {};
 
   const name = brand.name as string;
-  const description = ((brand.description ?? `Shop ${name} at LuxeMode — premium fashion curated for you.`) as string).slice(0, 160);
+  const description = ((brand.description ?? `Shop ${name} at Fashion Ghor — premium fashion curated for you.`) as string).slice(0, 160);
   const canonicalUrl = `${WEB_URL}/brand/${slug}`;
 
   return {
@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: `${name} | LuxeMode`,
+      title: `${name} | Fashion Ghor`,
       description,
       url: canonicalUrl,
       type: 'website',
       images: brand.logoUrl ? [{ url: brand.logoUrl as string, alt: name }] : [],
     },
-    twitter: { card: 'summary', title: `${name} | LuxeMode`, description },
+    twitter: { card: 'summary', title: `${name} | Fashion Ghor`, description },
   };
 }
 

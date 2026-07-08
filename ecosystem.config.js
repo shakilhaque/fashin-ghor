@@ -8,7 +8,7 @@ module.exports = {
   apps: [
     // ── NestJS API ──────────────────────────────────────────────────────────
     {
-      name: 'luxemode-api',
+      name: 'fashionghor-api',
       script: 'dist/main.js',
       cwd: './apps/api',
       instances: 'max',
@@ -31,7 +31,7 @@ module.exports = {
     // at the real JS entry file instead. Cluster mode also doesn't play well
     // with the Next.js CLI, so this stays in fork mode.
     {
-      name: 'luxemode-web',
+      name: 'fashionghor-web',
       script: 'node_modules/next/dist/bin/next',
       args: 'start --port 3000',
       cwd: './apps/web',

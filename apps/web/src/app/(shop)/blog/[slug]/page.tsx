@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: canonicalUrl,
       type: 'article',
       publishedTime: post.publishedAt ?? undefined,
-      authors: [post.author?.name ?? 'LuxeMode'],
+      authors: [post.author?.name ?? 'Fashion Ghor'],
       images: image ? [{ url: image, alt: title }] : [],
     },
     twitter: {

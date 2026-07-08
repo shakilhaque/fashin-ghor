@@ -16,10 +16,10 @@ export class MailService {
 
   async sendOtpEmail(to: string, code: string, purpose: 'email_verify' | 'forgot_password'): Promise<void> {
     const subject =
-      purpose === 'email_verify' ? 'Verify your LuxeMode account' : 'Reset your LuxeMode password';
+      purpose === 'email_verify' ? 'Verify your Fashion Ghor account' : 'Reset your Fashion Ghor password';
     const html = `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-        <h2 style="color: #059669;">LuxeMode</h2>
+        <h2 style="color: #059669;">Fashion Ghor</h2>
         <p>Your verification code is:</p>
         <p style="font-size: 32px; font-weight: bold; letter-spacing: 8px;">${code}</p>
         <p style="color: #666;">This code expires shortly. If you did not request this, you can ignore this email.</p>

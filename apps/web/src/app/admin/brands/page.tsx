@@ -198,7 +198,7 @@ export default function AdminBrandsPage() {
                 required
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="LuxeMode Originals"
+                placeholder="Fashion Ghor Originals"
                 className="mt-1"
               />
             </div>

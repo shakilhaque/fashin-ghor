@@ -46,7 +46,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4">
         <Link href="/" className="shrink-0 font-display text-2xl font-bold text-foreground">
-          Luxe<span className="text-primary">Mode</span>
+          Fashion <span className="text-primary">Ghor</span>
         </Link>
 
         <div className="hidden flex-1 items-center gap-1 md:flex">

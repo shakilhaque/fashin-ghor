@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
             <Shield className="h-7 w-7 text-primary" />
           </div>
           <h1 className="font-display text-2xl font-bold text-white">
-            Luxe<span className="text-primary">Mode</span>
+            Fashion <span className="text-primary">Ghor</span>
           </h1>
           <p className="mt-1 text-sm text-zinc-400">Admin Panel — Staff Access Only</p>
         </div>

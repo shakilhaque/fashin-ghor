@@ -108,7 +108,7 @@ export default function BlogPage() {
       <div className="border-b border-border bg-secondary/40 py-14 text-center px-4">
         <h1 className="font-display text-4xl font-bold">Style Journal</h1>
         <p className="mt-3 text-muted-foreground max-w-xl mx-auto">
-          Fashion insights, trend guides, and style tips from the LuxeMode team.
+          Fashion insights, trend guides, and style tips from the Fashion Ghor team.
         </p>
         <form onSubmit={handleSearch} className="relative mt-6 mx-auto max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

@@ -43,7 +43,7 @@ export class EmailService {
         <p style="color:#374151;line-height:1.6">${body}</p>
         ${button}
         <hr style="margin-top:32px;border:none;border-top:1px solid #e5e7eb"/>
-        <p style="color:#9ca3af;font-size:12px;margin-top:16px">LuxeMode — Fashion you love.</p>
+        <p style="color:#9ca3af;font-size:12px;margin-top:16px">Fashion Ghor — Fashion you love.</p>
       </div>
     `.trim();
   }

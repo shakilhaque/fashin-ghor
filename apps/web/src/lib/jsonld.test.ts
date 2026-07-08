@@ -8,7 +8,7 @@ describe('organizationSchema', () => {
     const schema = organizationSchema(SITE_URL);
     expect(schema['@context']).toBe('https://schema.org');
     expect(schema['@type']).toBe('Organization');
-    expect(schema.name).toBe('LuxeMode');
+    expect(schema.name).toBe('Fashion Ghor');
     expect(schema.url).toBe(SITE_URL);
   });
 
@@ -125,7 +125,7 @@ describe('articleSchema', () => {
     const schema = articleSchema(post, url, SITE_URL);
     const publisher = schema.publisher as Record<string, unknown>;
     expect(publisher['@type']).toBe('Organization');
-    expect(publisher.name).toBe('LuxeMode');
+    expect(publisher.name).toBe('Fashion Ghor');
     const logo = publisher.logo as Record<string, unknown>;
     expect(logo['@type']).toBe('ImageObject');
     expect(logo.url).toBe(`${SITE_URL}/logo.png`);

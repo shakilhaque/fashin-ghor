@@ -53,7 +53,7 @@ export default function RegisterPage() {
     <Card>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
-        <CardDescription>Join LuxeMode for a premium shopping experience.</CardDescription>
+        <CardDescription>Join Fashion Ghor for a premium shopping experience.</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">

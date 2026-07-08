@@ -54,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="hidden w-56 shrink-0 flex-col border-r border-border bg-background md:flex">
         <div className="border-b border-border px-5 py-4">
           <Link href="/" className="font-display text-xl font-bold">
-            Luxe<span className="text-primary">Mode</span>
+            Fashion <span className="text-primary">Ghor</span>
             <span className="ml-2 text-xs font-normal text-muted-foreground">Admin</span>
           </Link>
         </div>
@@ -86,7 +86,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Mobile top bar */}
         <header className="flex items-center justify-between border-b border-border bg-background px-4 py-3 md:hidden">
           <Link href="/" className="font-display text-lg font-bold">
-            Luxe<span className="text-primary">Mode</span>
+            Fashion <span className="text-primary">Ghor</span>
           </Link>
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             {navItems

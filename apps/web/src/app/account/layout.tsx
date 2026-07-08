@@ -7,7 +7,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
       <header className="border-b border-border bg-background">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <Link href="/" className="font-display text-2xl font-bold text-foreground">
-            Luxe<span className="text-primary">Mode</span>
+            Fashion <span className="text-primary">Ghor</span>
           </Link>
         </div>
       </header>

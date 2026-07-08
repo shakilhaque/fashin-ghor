@@ -47,6 +47,7 @@ interface StoryForm {
   position: string;
   scheduledAt: string;
   expiresAt: string;
+  productId: string;
 }
 
 const emptyForm = (): StoryForm => ({
@@ -57,6 +58,7 @@ const emptyForm = (): StoryForm => ({
   position: '0',
   scheduledAt: '',
   expiresAt: '',
+  productId: '',
 });
 
 function storyToForm(story: Story): StoryForm {
@@ -68,6 +70,7 @@ function storyToForm(story: Story): StoryForm {
     position: String(story.position),
     scheduledAt: story.scheduledAt ? story.scheduledAt.slice(0, 16) : '',
     expiresAt: story.expiresAt ? story.expiresAt.slice(0, 16) : '',
+    productId: story.productId ?? '',
   };
 }
 
@@ -360,6 +363,8 @@ export default function AdminStoriesPage() {
   const createStory = useCreateStory();
   const updateStory = useUpdateStory();
   const deleteStory = useDeleteStory();
+  const { data: productsData } = useProducts({ limit: 100 });
+  const products = productsData?.products ?? [];
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Story | null>(null);
@@ -387,6 +392,7 @@ export default function AdminStoriesPage() {
       position: Number(form.position),
       scheduledAt: form.scheduledAt ? new Date(form.scheduledAt).toISOString() : undefined,
       expiresAt: form.expiresAt ? new Date(form.expiresAt).toISOString() : undefined,
+      productId: form.productId || undefined,
     };
     if (editTarget) {
       await updateStory.mutateAsync({ id: editTarget.id, ...payload });
@@ -508,6 +514,23 @@ export default function AdminStoriesPage() {
                 placeholder="Explore our latest arrivals"
                 className="mt-1"
               />
+            </div>
+
+            <div>
+              <Label>Link Product (optional)</Label>
+              <select
+                value={form.productId}
+                onChange={(e) => setForm((f) => ({ ...f, productId: e.target.value }))}
+                className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="">— No product —</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Shows a &quot;Visit Now&quot; button when viewers open this story and it has no separate Slides yet.
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">

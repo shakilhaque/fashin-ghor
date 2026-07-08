@@ -19,6 +19,15 @@ const storyInclude = {
     include: slideInclude,
     orderBy: { position: 'asc' as const },
   },
+  product: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      price: true,
+      images: { take: 1, select: { url: true } },
+    },
+  },
 } as const;
 
 @Injectable()
@@ -57,6 +66,7 @@ export class StoriesRepository {
     position?: number;
     scheduledAt?: Date;
     expiresAt?: Date;
+    productId?: string | null;
   }) {
     return this.prisma.story.create({ data, include: storyInclude });
   }
@@ -69,6 +79,7 @@ export class StoriesRepository {
     position?: number;
     scheduledAt?: Date | null;
     expiresAt?: Date | null;
+    productId?: string | null;
   }) {
     return this.prisma.story.update({ where: { id }, data, include: storyInclude });
   }

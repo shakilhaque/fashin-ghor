@@ -34,6 +34,7 @@ export function useCreateStory() {
       position?: number;
       scheduledAt?: string;
       expiresAt?: string;
+      productId?: string;
     }) => {
       const { data } = await api.post('/stories', payload);
       return data.data.story as Story;

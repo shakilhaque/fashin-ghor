@@ -33,6 +33,7 @@ export class StoriesService {
       position: dto.position ?? 0,
       scheduledAt: dto.scheduledAt ? new Date(dto.scheduledAt) : undefined,
       expiresAt: dto.expiresAt ? new Date(dto.expiresAt) : undefined,
+      productId: dto.productId ?? null,
     });
   }
 
@@ -46,6 +47,7 @@ export class StoriesService {
       position: dto.position,
       scheduledAt: dto.scheduledAt !== undefined ? (dto.scheduledAt ? new Date(dto.scheduledAt) : null) : undefined,
       expiresAt: dto.expiresAt !== undefined ? (dto.expiresAt ? new Date(dto.expiresAt) : null) : undefined,
+      productId: dto.productId !== undefined ? (dto.productId ?? null) : undefined,
     });
   }
 

@@ -31,6 +31,14 @@ export interface Story {
   expiresAt: string | null;
   viewCount: number;
   slides: StorySlide[];
+  productId: string | null;
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    images: { url: string }[];
+  } | null;
   createdAt: string;
   updatedAt: string;
 }

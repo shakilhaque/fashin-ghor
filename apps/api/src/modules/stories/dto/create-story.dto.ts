@@ -39,4 +39,9 @@ export class CreateStoryDto {
   @IsOptional()
   @IsDateString()
   expiresAt?: string;
+
+  @ApiPropertyOptional({ description: 'Product shown by the "Visit Now" button when the story has no slides' })
+  @IsOptional()
+  @IsString()
+  productId?: string;
 }

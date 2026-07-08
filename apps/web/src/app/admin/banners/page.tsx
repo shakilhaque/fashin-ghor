@@ -15,6 +15,7 @@ import { ImageUploader } from '@/components/admin/image-uploader';
 import { cn } from '@/lib/utils';
 
 type BannerType = 'HERO' | 'SLIDER' | 'STATIC';
+type BannerSize = 'SMALL' | 'MEDIUM' | 'LARGE';
 
 interface BannerForm {
   title: string;
@@ -24,6 +25,7 @@ interface BannerForm {
   linkUrl: string;
   linkLabel: string;
   type: BannerType;
+  size: BannerSize;
   position: string;
   isActive: boolean;
 }
@@ -36,6 +38,7 @@ const emptyForm = (): BannerForm => ({
   linkUrl: '',
   linkLabel: '',
   type: 'SLIDER',
+  size: 'LARGE',
   position: '0',
   isActive: true,
 });
@@ -49,10 +52,17 @@ function bannerToForm(b: PromoBanner): BannerForm {
     linkUrl: b.linkUrl ?? '',
     linkLabel: b.linkLabel ?? '',
     type: b.type,
+    size: b.size ?? 'LARGE',
     position: String(b.position),
     isActive: b.isActive,
   };
 }
+
+const SIZE_LABELS: Record<BannerSize, string> = {
+  SMALL: 'Small',
+  MEDIUM: 'Medium',
+  LARGE: 'Large',
+};
 
 const TYPE_LABELS: Record<BannerType, string> = {
   HERO: 'Hero',
@@ -252,6 +262,22 @@ export default function AdminBannersPage() {
               </div>
             </div>
 
+            {form.type === 'HERO' && (
+              <div>
+                <Label>Size</Label>
+                <select
+                  value={form.size}
+                  onChange={(e) => setForm((f) => ({ ...f, size: e.target.value as BannerSize }))}
+                  className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="SMALL">Small</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="LARGE">Large</option>
+                </select>
+                <p className="mt-1 text-xs text-muted-foreground">Controls the height of the homepage hero banner.</p>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label>Title</Label>
@@ -345,9 +371,16 @@ function BannerGrid({
                 <p className="font-medium truncate text-sm">{b.title ?? '(No title)'}</p>
                 {b.subtitle && <p className="text-xs text-muted-foreground truncate">{b.subtitle}</p>}
               </div>
-              <span className={cn('shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold', TYPE_COLORS[b.type])}>
-                {TYPE_LABELS[b.type]}
-              </span>
+              <div className="flex shrink-0 items-center gap-1">
+                {b.type === 'HERO' && (
+                  <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                    {SIZE_LABELS[b.size ?? 'LARGE']}
+                  </span>
+                )}
+                <span className={cn('rounded-full px-2 py-0.5 text-[10px] font-semibold', TYPE_COLORS[b.type])}>
+                  {TYPE_LABELS[b.type]}
+                </span>
+              </div>
             </div>
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center gap-1.5">

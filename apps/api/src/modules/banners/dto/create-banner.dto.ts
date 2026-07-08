@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { BannerType } from '@prisma/client';
+import { BannerType, BannerSize } from '@prisma/client';
 
 export class CreateBannerDto {
   @IsOptional() @IsString() title?: string;
@@ -9,6 +9,7 @@ export class CreateBannerDto {
   @IsOptional() @IsString() linkUrl?: string;
   @IsOptional() @IsString() linkLabel?: string;
   @IsEnum(BannerType) type: BannerType;
+  @IsOptional() @IsEnum(BannerSize) size?: BannerSize;
   @IsOptional() @IsNumber() position?: number;
   @IsOptional() @IsBoolean() isActive?: boolean;
   @IsOptional() @IsString() startDate?: string;

@@ -10,6 +10,7 @@ export interface PromoBanner {
   linkUrl: string | null;
   linkLabel: string | null;
   type: 'HERO' | 'SLIDER' | 'STATIC';
+  size: 'SMALL' | 'MEDIUM' | 'LARGE';
   position: number;
   isActive: boolean;
   startDate: string | null;

@@ -172,6 +172,12 @@ function ProductCard({ product }: { product: Product }) {
 // falling back to the built-in gradient slides so the homepage never looks
 // empty before an admin configures anything.
 
+const HERO_HEIGHT_CLASSES: Record<'SMALL' | 'MEDIUM' | 'LARGE', string> = {
+  SMALL: 'min-h-[220px] sm:min-h-[260px]',
+  MEDIUM: 'min-h-[320px] sm:min-h-[380px]',
+  LARGE: 'min-h-[480px] sm:min-h-[560px]',
+};
+
 function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
   const [active, setActive] = useState(0);
   const slideCount = banners.length > 0 ? banners.length : HERO_SLIDES.length;
@@ -187,9 +193,10 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
 
   if (banners.length > 0) {
     const banner = banners[active];
+    const heightClass = HERO_HEIGHT_CLASSES[banner.size ?? 'LARGE'];
     return (
       <section className="relative overflow-hidden bg-secondary">
-        <div className="relative min-h-[480px] w-full sm:min-h-[560px]">
+        <div className={cn('relative w-full', heightClass)}>
           <Image
             src={banner.imageUrl}
             alt={banner.title ?? 'Hero banner'}
@@ -200,7 +207,7 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
-          <div className="relative mx-auto flex min-h-[480px] max-w-7xl items-center px-4 py-16 sm:min-h-[560px] sm:px-8 lg:px-12">
+          <div className={cn('relative mx-auto flex max-w-7xl items-center px-4 py-16 sm:px-8 lg:px-12', heightClass)}>
             <div className="max-w-xl">
               {banner.badgeText && (
                 <span className="mb-4 inline-block rounded-full bg-amber-400 px-3 py-1 text-xs font-semibold text-black">

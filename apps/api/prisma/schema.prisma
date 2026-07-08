@@ -862,6 +862,12 @@ enum BannerType {
   STATIC
 }
 
+enum BannerSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
 model PromoBanner {
   id         String     @id @default(uuid())
   title      String?
@@ -871,6 +877,7 @@ model PromoBanner {
   linkUrl    String?
   linkLabel  String?
   type       BannerType @default(SLIDER)
+  size       BannerSize @default(LARGE)
   position   Int        @default(0)
   isActive   Boolean    @default(true)
   startDate  DateTime?

@@ -470,7 +470,7 @@ export default function AdminStoriesPage() {
 
       {/* Create / Edit dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editTarget ? 'Edit Story' : 'New Story'}</DialogTitle>
           </DialogHeader>

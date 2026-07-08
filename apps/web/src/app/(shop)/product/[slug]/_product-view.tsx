@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingCart, Star, CheckCircle2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Minus, Plus, ShoppingCart, Star, CheckCircle2 } from 'lucide-react';
 import { useProduct } from '@/hooks/use-products';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useAuth } from '@/contexts/auth-context';
@@ -273,12 +274,15 @@ function ProductRatingBadge({ productId }: { productId: string }) {
 
 export function ProductView({ slug }: { slug: string }) {
   const { data: product, isLoading, isError } = useProduct(slug);
+  const router = useRouter();
 
   const addToCart = useAddToCart();
   const [activeImage, setActiveImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [addedFeedback, setAddedFeedback] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [isBuyingNow, setIsBuyingNow] = useState(false);
 
   const colors = useMemo(
     () => [...new Set(product?.variants.map((v) => v.color).filter(Boolean))] as string[],
@@ -444,24 +448,77 @@ export function ProductView({ slug }: { slug: string }) {
             )}
           </div>
 
-          <Button
-            className="mt-6 w-full"
-            size="lg"
-            disabled={!inStock || (hasVariants && !selectedVariant) || addToCart.isPending}
-            onClick={async () => {
-              if (!product) return;
-              await addToCart.mutateAsync({
-                productId: product.id,
-                variantId: selectedVariant?.id,
-                quantity: 1,
-              });
-              setAddedFeedback(true);
-              setTimeout(() => setAddedFeedback(false), 2000);
-            }}
-          >
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            {addedFeedback ? 'Added!' : addToCart.isPending ? 'Adding…' : 'Add to Cart'}
-          </Button>
+          {/* Quantity */}
+          <div className="mt-6">
+            <span className="text-sm font-medium">Quantity</span>
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex items-center rounded-lg border border-border">
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  disabled={quantity <= 1}
+                  className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-40"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-10 text-center text-sm font-medium">{quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const maxQty = hasVariants ? (selectedVariant?.stock ?? 0) : (product?.stock ?? 0);
+                    setQuantity((q) => (maxQty ? Math.min(maxQty, q + 1) : q + 1));
+                  }}
+                  disabled={!inStock}
+                  className="flex h-10 w-10 items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-40"
+                  aria-label="Increase quantity"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <Button
+              size="lg"
+              variant="outline"
+              disabled={!inStock || (hasVariants && !selectedVariant) || addToCart.isPending}
+              onClick={async () => {
+                if (!product) return;
+                await addToCart.mutateAsync({
+                  productId: product.id,
+                  variantId: selectedVariant?.id,
+                  quantity,
+                });
+                setAddedFeedback(true);
+                setTimeout(() => setAddedFeedback(false), 2000);
+              }}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              {addedFeedback ? 'Added!' : addToCart.isPending ? 'Adding…' : 'Add to Cart'}
+            </Button>
+            <Button
+              size="lg"
+              disabled={!inStock || (hasVariants && !selectedVariant) || isBuyingNow}
+              onClick={async () => {
+                if (!product) return;
+                setIsBuyingNow(true);
+                try {
+                  await addToCart.mutateAsync({
+                    productId: product.id,
+                    variantId: selectedVariant?.id,
+                    quantity,
+                  });
+                  router.push('/checkout');
+                } finally {
+                  setIsBuyingNow(false);
+                }
+              }}
+            >
+              {isBuyingNow ? 'Please wait…' : 'Buy Now'}
+            </Button>
+          </div>
 
           {product.tags.length > 0 && (
             <div className="mt-8 flex flex-wrap gap-2">

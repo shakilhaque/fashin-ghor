@@ -230,29 +230,27 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
             onClick={(e) => { e.stopPropagation(); goNextRef.current(); }}
           />
 
-          {/* Caption */}
-          {slide?.caption && (
-            <div className="absolute bottom-20 left-0 right-0 px-5 z-10 pointer-events-none">
-              <p className="text-center text-sm text-white font-medium drop-shadow-lg">
-                {slide.caption}
-              </p>
-            </div>
-          )}
-
-          {/* Shop Now */}
-          {slide?.product && (
-            <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center px-4">
-              <Link
-                href={`/product/${slide.product.slug}`}
-                onClick={onClose}
-                className={cn(
-                  'flex items-center gap-2 rounded-full bg-white px-6 py-2.5',
-                  'text-sm font-semibold text-black shadow-xl hover:bg-white/95 transition-colors',
-                )}
-              >
-                <ShoppingBag className="h-4 w-4" />
-                Shop Now
-              </Link>
+          {/* Caption + Visit Now (bottom-left, matches product-story reference layout) */}
+          {(slide?.caption || slide?.product) && (
+            <div className="absolute bottom-8 left-5 right-5 z-20 flex flex-col items-start gap-3">
+              {slide?.caption && (
+                <p className="max-w-[85%] text-lg font-bold leading-snug text-white drop-shadow-lg pointer-events-none">
+                  {slide.caption}
+                </p>
+              )}
+              {slide?.product && (
+                <Link
+                  href={`/product/${slide.product.slug}`}
+                  onClick={onClose}
+                  className={cn(
+                    'flex items-center gap-2 rounded-full bg-primary px-6 py-2.5',
+                    'text-sm font-semibold text-primary-foreground shadow-xl hover:opacity-90 transition-opacity',
+                  )}
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Visit Now
+                </Link>
+              )}
             </div>
           )}
         </div>

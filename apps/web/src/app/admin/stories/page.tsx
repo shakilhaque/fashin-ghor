@@ -23,6 +23,7 @@ import {
   useAddSlide,
   useDeleteSlide,
 } from '@/hooks/use-stories';
+import { useProducts } from '@/hooks/use-products';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,6 +33,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { ImageUploader } from '@/components/admin/image-uploader';
 import { cn } from '@/lib/utils';
 import type { Story, StorySlide } from '@ecommerce/types';
 
@@ -107,6 +109,8 @@ function StoryRow({
   const deleteSlide = useDeleteSlide();
   const [slideForm, setSlideForm] = useState<SlideForm>(emptySlideForm);
   const [addingSlide, setAddingSlide] = useState(false);
+  const { data: productsData } = useProducts({ limit: 100 });
+  const products = productsData?.products ?? [];
 
   async function handleAddSlide(e: React.FormEvent) {
     e.preventDefault();
@@ -248,21 +252,11 @@ function StoryRow({
             <form onSubmit={handleAddSlide} className="rounded-lg border border-dashed border-border p-3 space-y-2">
               <p className="text-xs font-semibold text-foreground mb-2">Add Slide</p>
               <div className="grid grid-cols-2 gap-2">
-                <div className="col-span-2">
-                  <Label className="text-xs">Media URL *</Label>
-                  <Input
-                    required
-                    value={slideForm.mediaUrl}
-                    onChange={(e) => setSlideForm((f) => ({ ...f, mediaUrl: e.target.value }))}
-                    placeholder="https://cdn.example.com/image.jpg"
-                    className="mt-1 h-8 text-xs"
-                  />
-                </div>
                 <div>
                   <Label className="text-xs">Type</Label>
                   <select
                     value={slideForm.mediaType}
-                    onChange={(e) => setSlideForm((f) => ({ ...f, mediaType: e.target.value as 'IMAGE' | 'VIDEO' }))}
+                    onChange={(e) => setSlideForm((f) => ({ ...f, mediaType: e.target.value as 'IMAGE' | 'VIDEO', mediaUrl: '' }))}
                     className="mt-1 h-8 w-full rounded-md border border-input bg-background px-2 text-xs"
                   >
                     <option value="IMAGE">Image</option>
@@ -281,6 +275,33 @@ function StoryRow({
                   />
                 </div>
                 <div className="col-span-2">
+                  {slideForm.mediaType === 'IMAGE' ? (
+                    <>
+                      <Label className="text-xs">Slide Image *</Label>
+                      <div className="mt-1 max-w-[140px]">
+                        <ImageUploader
+                          value={slideForm.mediaUrl}
+                          onChange={(url) => setSlideForm((f) => ({ ...f, mediaUrl: url }))}
+                          folder="stories"
+                          label="Upload"
+                          aspect="portrait"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Label className="text-xs">Video URL *</Label>
+                      <Input
+                        required
+                        value={slideForm.mediaUrl}
+                        onChange={(e) => setSlideForm((f) => ({ ...f, mediaUrl: e.target.value }))}
+                        placeholder="https://cdn.example.com/clip.mp4"
+                        className="mt-1 h-8 text-xs"
+                      />
+                    </>
+                  )}
+                </div>
+                <div className="col-span-2">
                   <Label className="text-xs">Caption (optional)</Label>
                   <Input
                     value={slideForm.caption}
@@ -290,17 +311,21 @@ function StoryRow({
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label className="text-xs">Product ID (optional — links Shop Now button)</Label>
-                  <Input
+                  <Label className="text-xs">Link Product (optional — shows a "Visit Now" button)</Label>
+                  <select
                     value={slideForm.productId}
                     onChange={(e) => setSlideForm((f) => ({ ...f, productId: e.target.value }))}
-                    placeholder="UUID of a product"
-                    className="mt-1 h-8 text-xs"
-                  />
+                    className="mt-1 h-8 w-full rounded-md border border-input bg-background px-2 text-xs"
+                  >
+                    <option value="">— No product —</option>
+                    {products.map((p) => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div className="flex gap-2 pt-1">
-                <Button type="submit" size="sm" disabled={addSlide.isPending} className="h-7 text-xs">
+                <Button type="submit" size="sm" disabled={addSlide.isPending || !slideForm.mediaUrl} className="h-7 text-xs">
                   {addSlide.isPending ? 'Adding…' : 'Add Slide'}
                 </Button>
                 <Button
@@ -463,19 +488,16 @@ export default function AdminStoriesPage() {
             </div>
 
             <div>
-              <Label>Cover Image URL *</Label>
-              <Input
-                required
-                value={form.coverImage}
-                onChange={(e) => setForm((f) => ({ ...f, coverImage: e.target.value }))}
-                placeholder="https://cdn.example.com/cover.jpg"
-                className="mt-1"
-              />
-              {form.coverImage && (
-                <div className="mt-2 relative h-20 w-14 rounded-lg overflow-hidden border border-border">
-                  <Image src={form.coverImage} alt="Cover preview" fill className="object-cover" sizes="56px" />
-                </div>
-              )}
+              <Label>Cover Image *</Label>
+              <div className="mt-1 max-w-[160px]">
+                <ImageUploader
+                  value={form.coverImage}
+                  onChange={(url) => setForm((f) => ({ ...f, coverImage: url }))}
+                  folder="stories"
+                  label="Upload Cover"
+                  aspect="portrait"
+                />
+              </div>
             </div>
 
             <div>

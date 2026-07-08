@@ -11,7 +11,7 @@ const ALLOWED_TYPES = [
   'video/webm',
 ] as const;
 
-const ALLOWED_FOLDERS = ['products', 'stories', 'blog', 'brands', 'banners', 'avatars'] as const;
+const ALLOWED_FOLDERS = ['products', 'stories', 'blog', 'brands', 'banners', 'avatars', 'categories'] as const;
 
 export class PresignDto {
   @ApiProperty({ example: 'product-hero.jpg' })

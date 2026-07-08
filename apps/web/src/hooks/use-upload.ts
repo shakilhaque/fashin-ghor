@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { api } from '@/lib/api';
 
-type UploadFolder = 'products' | 'stories' | 'blog' | 'brands' | 'banners' | 'avatars';
+type UploadFolder = 'products' | 'stories' | 'blog' | 'brands' | 'banners' | 'avatars' | 'categories';
 
 interface UploadResult {
   publicUrl: string;

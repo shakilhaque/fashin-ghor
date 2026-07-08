@@ -30,12 +30,26 @@ function useAdminProducts(page: number, search: string) {
   });
 }
 
+interface CategoryOption {
+  id: string;
+  name: string;
+  slug: string;
+  children?: CategoryOption[];
+}
+
+function flattenCategories(categories: CategoryOption[], depth = 0): { id: string; name: string }[] {
+  return categories.flatMap((c) => [
+    { id: c.id, name: `${'—'.repeat(depth)}${depth ? ' ' : ''}${c.name}` },
+    ...flattenCategories(c.children ?? [], depth + 1),
+  ]);
+}
+
 function useCategories() {
   return useQuery({
-    queryKey: ['categories', 'tree'],
+    queryKey: ['categories', 'admin'],
     queryFn: async () => {
-      const { data } = await api.get('/categories/tree');
-      return data.data.categories as { id: string; name: string; slug: string }[];
+      const { data } = await api.get('/categories/admin/all');
+      return flattenCategories(data.data.categories as CategoryOption[]);
     },
     staleTime: 5 * 60 * 1000,
   });

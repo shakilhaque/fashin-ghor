@@ -5,6 +5,8 @@ export interface Category {
   description: string | null;
   imageUrl: string | null;
   parentId: string | null;
+  isActive: boolean;
+  sortOrder: number;
   children?: Category[];
 }
 
@@ -15,6 +17,8 @@ export interface Brand {
   logoUrl: string | null;
   description: string | null;
   country: string | null;
+  website: string | null;
+  isActive: boolean;
 }
 
 export interface ProductImage {

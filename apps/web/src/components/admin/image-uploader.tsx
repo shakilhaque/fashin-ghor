@@ -6,7 +6,7 @@ import { Upload, X, ImageIcon, Loader2 } from 'lucide-react';
 import { useUpload } from '@/hooks/use-upload';
 import { cn } from '@/lib/utils';
 
-type UploadFolder = 'products' | 'stories' | 'blog' | 'brands' | 'banners' | 'avatars';
+type UploadFolder = 'products' | 'stories' | 'blog' | 'brands' | 'banners' | 'avatars' | 'categories';
 
 interface ImageUploaderProps {
   value?: string;

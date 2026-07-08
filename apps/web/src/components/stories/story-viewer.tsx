@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ShoppingBag, X } from 'lucide-react';
-import type { Story } from '@ecommerce/types';
+import { ChevronLeft, ChevronRight, Pause, Play, ShoppingBag, X } from 'lucide-react';
+import type { Story, StorySlide } from '@ecommerce/types';
 import { useTrackStoryView } from '@/hooks/use-stories';
 import { cn } from '@/lib/utils';
 
@@ -25,12 +25,33 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
   const touchStartX = useRef(0);
 
   const story = stories[storyIdx];
-  const slide = story?.slides[slideIdx];
+
+  // Stories with no slides yet fall back to showing the cover image full-screen,
+  // so a story created with only a cover image still displays as expected.
+  const effectiveSlides: StorySlide[] = story?.slides.length
+    ? story.slides
+    : story
+      ? [{
+          id: `cover-${story.id}`,
+          storyId: story.id,
+          mediaUrl: story.coverImage,
+          mediaType: 'IMAGE',
+          duration: 5,
+          caption: story.subtitle ?? null,
+          productId: null,
+          product: null,
+          position: 0,
+          createdAt: story.createdAt,
+          updatedAt: story.createdAt,
+        }]
+      : [];
+
+  const slide = effectiveSlides[slideIdx];
   const duration = (slide?.duration ?? 5) * 1000;
 
   const goNext = useCallback(() => {
     if (!story) return;
-    if (slideIdx < story.slides.length - 1) {
+    if (slideIdx < effectiveSlides.length - 1) {
       setSlideIdx((s) => s + 1);
     } else if (storyIdx < stories.length - 1) {
       const nextIdx = storyIdx + 1;
@@ -145,7 +166,7 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
       >
         {/* Progress bars */}
         <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-3 pt-2.5">
-          {story.slides.map((s, i) => (
+          {effectiveSlides.map((s, i) => (
             <div
               key={s.id}
               className="h-[2.5px] flex-1 rounded-full bg-white/35 overflow-hidden"
@@ -174,22 +195,26 @@ export function StoryViewer({ stories, initialStoryIndex, onClose }: StoryViewer
               )}
             </div>
           </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
-            aria-label="Close story viewer"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={(e) => { e.stopPropagation(); setPaused((p) => !p); }}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
+              aria-label={paused ? 'Play' : 'Pause'}
+            >
+              {paused ? <Play className="h-3.5 w-3.5" /> : <Pause className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onClose(); }}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
+              aria-label="Close story viewer"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/* Media area */}
-        <div
-          className="absolute inset-0 rounded-2xl overflow-hidden bg-black"
-          onMouseDown={() => setPaused(true)}
-          onMouseUp={() => setPaused(false)}
-          onMouseLeave={() => setPaused(false)}
-        >
+        <div className="absolute inset-0 rounded-2xl overflow-hidden bg-black">
           {slide ? (
             slide.mediaType === 'VIDEO' ? (
               <video

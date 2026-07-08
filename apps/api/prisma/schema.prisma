@@ -857,6 +857,7 @@ model StorySlide {
 // ─── Promo Banners ────────────────────────────────────────────────────────────
 
 enum BannerType {
+  HERO
   SLIDER
   STATIC
 }

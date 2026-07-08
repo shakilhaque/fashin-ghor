@@ -92,10 +92,24 @@ pm2 startup   # auto-start on server reboot
 ```
 
 ### 4. Nginx config
+
+Two variants are provided, depending on the box:
+
+**Dedicated server** (nginx.conf owned entirely by this app):
 ```bash
 sudo cp nginx/nginx.conf /etc/nginx/nginx.conf
 sudo nginx -t
 sudo systemctl reload nginx
+```
+
+**Shared server** (other apps already have their own `sites-available/*` files —
+do NOT overwrite `/etc/nginx/nginx.conf`, add a site instead):
+```bash
+sudo cp nginx/fashionghor-site.conf /etc/nginx/sites-available/fashionghor
+sudo ln -s /etc/nginx/sites-available/fashionghor /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+sudo certbot --nginx -d fashionghor.netspheresolutionsltd.com
 ```
 
 ---

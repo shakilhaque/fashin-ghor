@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { cn } from '@/lib/utils';
 
-type BannerType = 'SLIDER' | 'STATIC';
+type BannerType = 'HERO' | 'SLIDER' | 'STATIC';
 
 interface BannerForm {
   title: string;
@@ -55,11 +55,13 @@ function bannerToForm(b: PromoBanner): BannerForm {
 }
 
 const TYPE_LABELS: Record<BannerType, string> = {
+  HERO: 'Hero',
   SLIDER: 'Slider',
   STATIC: 'Static',
 };
 
 const TYPE_COLORS: Record<BannerType, string> = {
+  HERO: 'bg-amber-100 text-amber-700',
   SLIDER: 'bg-blue-100 text-blue-700',
   STATIC: 'bg-violet-100 text-violet-700',
 };
@@ -74,6 +76,7 @@ export default function AdminBannersPage() {
   const [editTarget, setEditTarget] = useState<PromoBanner | null>(null);
   const [form, setForm] = useState<BannerForm>(emptyForm());
 
+  const heroes = banners.filter((b) => b.type === 'HERO');
   const sliders = banners.filter((b) => b.type === 'SLIDER');
   const statics = banners.filter((b) => b.type === 'STATIC');
 
@@ -146,6 +149,27 @@ export default function AdminBannersPage() {
         ))}
       </div>
 
+      {/* Hero Banners */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Hero Banners ({heroes.length})
+          </h2>
+          <button onClick={() => openCreate('HERO')} className="text-xs text-primary hover:underline">+ Add Hero</button>
+        </div>
+        <p className="text-xs text-muted-foreground -mt-2">
+          Shown in the large rotating banner at the very top of the homepage.
+        </p>
+        <BannerGrid
+          banners={heroes}
+          isLoading={isLoading}
+          onEdit={openEdit}
+          onToggle={toggleActive}
+          onDelete={(id) => { if (confirm('Delete this banner?')) deleteMutation.mutate(id); }}
+          isPending={deleteMutation.isPending || updateMutation.isPending}
+        />
+      </div>
+
       {/* Slider Banners */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
@@ -211,6 +235,7 @@ export default function AdminBannersPage() {
                   onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as BannerType }))}
                   className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 >
+                  <option value="HERO">Hero</option>
                   <option value="SLIDER">Slider</option>
                   <option value="STATIC">Static</option>
                 </select>

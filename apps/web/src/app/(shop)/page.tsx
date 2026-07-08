@@ -10,7 +10,7 @@ import { useProducts } from '@/hooks/use-products';
 import { useBrands } from '@/hooks/use-brands';
 import { useCart, useAddToCart } from '@/hooks/use-cart';
 import { useStories } from '@/hooks/use-stories';
-import { useBanners } from '@/hooks/use-banners';
+import { useBanners, type PromoBanner } from '@/hooks/use-banners';
 import { StoriesCarousel } from '@/components/stories/story-carousel';
 import { StoryViewer } from '@/components/stories/story-viewer';
 import { PromoBannerSection } from '@/components/home/promo-banner-section';
@@ -168,14 +168,78 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 // ── Hero carousel ─────────────────────────────────────────────────────────────
+// Renders admin-uploaded HERO banners as real photo slides when available,
+// falling back to the built-in gradient slides so the homepage never looks
+// empty before an admin configures anything.
 
-function HeroCarousel() {
+function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
   const [active, setActive] = useState(0);
+  const slideCount = banners.length > 0 ? banners.length : HERO_SLIDES.length;
 
   useEffect(() => {
-    const t = setInterval(() => setActive((p) => (p + 1) % HERO_SLIDES.length), 5000);
+    setActive(0);
+  }, [banners.length]);
+
+  useEffect(() => {
+    const t = setInterval(() => setActive((p) => (p + 1) % slideCount), 5000);
     return () => clearInterval(t);
-  }, []);
+  }, [slideCount]);
+
+  if (banners.length > 0) {
+    const banner = banners[active];
+    return (
+      <section className="relative overflow-hidden bg-secondary">
+        <div className="relative min-h-[480px] w-full sm:min-h-[560px]">
+          <Image
+            src={banner.imageUrl}
+            alt={banner.title ?? 'Hero banner'}
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+
+          <div className="relative mx-auto flex min-h-[480px] max-w-7xl items-center px-4 py-16 sm:min-h-[560px] sm:px-8 lg:px-12">
+            <div className="max-w-xl">
+              {banner.badgeText && (
+                <span className="mb-4 inline-block rounded-full bg-amber-400 px-3 py-1 text-xs font-semibold text-black">
+                  {banner.badgeText}
+                </span>
+              )}
+              {banner.title && (
+                <h1 className="font-display text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl whitespace-pre-line">
+                  {banner.title}
+                </h1>
+              )}
+              {banner.subtitle && (
+                <p className="mt-4 max-w-sm text-white/70 text-base sm:text-lg">
+                  {banner.subtitle}
+                </p>
+              )}
+              <div className="mt-8 flex gap-3">
+                {banner.linkUrl && (
+                  <Button asChild size="lg" className="rounded-full bg-white text-black hover:bg-white/90 font-semibold">
+                    <Link href={banner.linkUrl}>
+                      {banner.linkLabel ?? 'Shop Now'}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
+                <Button asChild size="lg" variant="ghost" className="rounded-full text-white border-white/30 border hover:bg-white/10">
+                  <Link href="/shop">View All</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {banners.length > 1 && (
+          <HeroControls active={active} count={banners.length} onPrev={() => setActive((p) => (p - 1 + banners.length) % banners.length)} onNext={() => setActive((p) => (p + 1) % banners.length)} onSelect={setActive} />
+        )}
+      </section>
+    );
+  }
 
   const slide = HERO_SLIDES[active];
 
@@ -216,33 +280,32 @@ function HeroCarousel() {
         <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
       </div>
 
-      {/* Controls */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4">
-        <button
-          onClick={() => setActive((p) => (p - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-
-        <div className="flex gap-2">
-          {HERO_SLIDES.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={cn('h-2 rounded-full transition-all', i === active ? 'w-6 bg-white' : 'w-2 bg-white/40')}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={() => setActive((p) => (p + 1) % HERO_SLIDES.length)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
+      <HeroControls active={active} count={HERO_SLIDES.length} onPrev={() => setActive((p) => (p - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)} onNext={() => setActive((p) => (p + 1) % HERO_SLIDES.length)} onSelect={setActive} />
     </section>
+  );
+}
+
+function HeroControls({ active, count, onPrev, onNext, onSelect }: { active: number; count: number; onPrev: () => void; onNext: () => void; onSelect: (i: number) => void }) {
+  return (
+    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4">
+      <button onClick={onPrev} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40">
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+
+      <div className="flex gap-2">
+        {Array.from({ length: count }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => onSelect(i)}
+            className={cn('h-2 rounded-full transition-all', i === active ? 'w-6 bg-white' : 'w-2 bg-white/40')}
+          />
+        ))}
+      </div>
+
+      <button onClick={onNext} className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40">
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
@@ -316,7 +379,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <HeroCarousel />
+      <HeroCarousel banners={activeBanners.filter((b) => b.type === 'HERO')} />
 
       {/* ── Stories ──────────────────────────────────────────── */}
       {activeStories.length > 0 && (

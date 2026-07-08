@@ -26,13 +26,17 @@ module.exports = {
     },
 
     // ── Next.js Web ─────────────────────────────────────────────────────────
+    // PM2 `require()`s the script as a CommonJS module, so it can't run
+    // node_modules/.bin/next (that's a POSIX shell shim, not JS) — point it
+    // at the real JS entry file instead. Cluster mode also doesn't play well
+    // with the Next.js CLI, so this stays in fork mode.
     {
       name: 'luxemode-web',
-      script: 'node_modules/.bin/next',
+      script: 'node_modules/next/dist/bin/next',
       args: 'start --port 3000',
       cwd: './apps/web',
-      instances: 2,
-      exec_mode: 'cluster',
+      instances: 1,
+      exec_mode: 'fork',
       watch: false,
       max_memory_restart: '400M',
       env_production: {

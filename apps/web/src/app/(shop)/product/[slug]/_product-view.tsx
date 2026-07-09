@@ -231,40 +231,32 @@ function ReviewsSection({ productId }: { productId: string }) {
         <WriteReviewForm productId={productId} />
       </div>
 
-      <div className="mt-10">
-        {reviews.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border py-12 text-center">
-            <Star className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />
-            <p className="font-medium">No reviews yet</p>
-            <p className="text-sm text-muted-foreground mt-1">Be the first to share your thoughts.</p>
-          </div>
-        ) : (
-          <>
-            {reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
-            {meta && meta.totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-6">
-                <button
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40 hover:bg-secondary"
-                >
-                  Previous
-                </button>
-                <span className="px-3 py-2 text-sm text-muted-foreground">
-                  {meta.page} / {meta.totalPages}
-                </span>
-                <button
-                  disabled={page >= meta.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40 hover:bg-secondary"
-                >
-                  Next
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      {reviews.length > 0 && (
+        <div className="mt-10">
+          {reviews.map((review) => <ReviewCard key={review.id} review={review} />)}
+          {meta && meta.totalPages > 1 && (
+            <div className="flex justify-center gap-2 mt-6">
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40 hover:bg-secondary"
+              >
+                Previous
+              </button>
+              <span className="px-3 py-2 text-sm text-muted-foreground">
+                {meta.page} / {meta.totalPages}
+              </span>
+              <button
+                disabled={page >= meta.totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="rounded-lg border border-border px-4 py-2 text-sm disabled:opacity-40 hover:bg-secondary"
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

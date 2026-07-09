@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Minus, Plus, ShoppingCart, Star, CheckCircle2 } from 'lucide-react';
+import { Minus, Plus, ShoppingCart, Star, CheckCircle2, MessageCircle, Phone, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useProduct } from '@/hooks/use-products';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useAuth } from '@/contexts/auth-context';
@@ -16,6 +16,10 @@ import {
 } from '@/hooks/use-reviews';
 import { Button } from '@/components/ui/button';
 import { cn, formatPrice } from '@/lib/utils';
+
+const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
+const STORE_WHATSAPP = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || '+8801700000000').replace(/[^\d]/g, '');
+const STORE_PHONE = process.env.NEXT_PUBLIC_STORE_PHONE || '+8801700000000';
 
 function StarRating({ value, max = 5, size = 'md', onChange }: {
   value: number;
@@ -518,6 +522,65 @@ export function ProductView({ slug }: { slug: string }) {
             >
               {isBuyingNow ? 'Please wait…' : 'Buy Now'}
             </Button>
+          </div>
+
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <a
+              href={`https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(`Hi, I'm interested in "${product.name}" (${WEB_URL}/product/${product.slug})`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Order on WhatsApp
+            </a>
+            <a
+              href={`tel:${STORE_PHONE}`}
+              className="flex items-center justify-center gap-2 rounded-lg bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-900 transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+              Call for Order
+            </a>
+          </div>
+
+          <div className="mt-6 flex items-center gap-3">
+            <span className="text-sm font-medium text-muted-foreground">Share Now:</span>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${WEB_URL}/product/${product.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on Facebook"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`${WEB_URL}/product/${product.slug}`)}&text=${encodeURIComponent(product.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on Twitter"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            >
+              <Twitter className="h-4 w-4" />
+            </a>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`${product.name} — ${WEB_URL}/product/${product.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on WhatsApp"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+            </a>
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`${WEB_URL}/product/${product.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Share on LinkedIn"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
           </div>
 
           {product.tags.length > 0 && (

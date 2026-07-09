@@ -369,6 +369,7 @@ export default function HomePage() {
   const { data: categories } = useCategoryTree();
   const { data: featuredData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: newArrivalsData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
+  const { data: premiumData } = useProducts({ categorySlug: 'premium-wear', limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: brands } = useBrands();
   const { data: storiesData } = useStories();
   const { data: bannersData } = useBanners();
@@ -377,6 +378,7 @@ export default function HomePage() {
   const [activeStoryIndex, setActiveStoryIndex] = useState(0);
 
   const featuredProducts = featuredData?.products ?? [];
+  const premiumProducts = premiumData?.products ?? [];
   const newArrivals = (newArrivalsData?.products ?? []).slice(4, 8);
   const topCategories = (categories ?? []).slice(0, 8);
   const topBrands = (brands ?? []).slice(0, 6);
@@ -455,6 +457,23 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Premium ────────────────────────────────────────────── */}
+      {premiumProducts.length > 0 && (
+        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+          <SectionHeader
+            title="Premium"
+            subtitle="Our finest premium wear collection"
+            href="/category/premium-wear"
+            linkLabel="View All Items"
+          />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
+            {premiumProducts.map((product: Product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Featured Products ─────────────────────────────────── */}
       {featuredProducts.length > 0 && (

@@ -56,27 +56,28 @@ function StarRating({ value, max = 5, size = 'md', onChange }: {
 
 function RatingSummary({ productId }: { productId: string }) {
   const { data: stats } = useProductReviewStats(productId);
-  if (!stats || stats.total === 0) return null;
+  const average = stats?.average ?? 0;
+  const total = stats?.total ?? 0;
+  const distribution = stats?.distribution ?? {};
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-      <div className="text-center sm:pr-6 sm:border-r border-border">
-        <p className="font-display text-4xl font-bold">{stats.average.toFixed(1)}</p>
-        <StarRating value={Math.round(stats.average)} size="sm" />
-        <p className="mt-1 text-xs text-muted-foreground">{stats.total} review{stats.total !== 1 ? 's' : ''}</p>
-      </div>
-      <div className="flex-1 space-y-1.5">
+    <div>
+      <p className="font-display text-4xl font-bold text-primary">{average.toFixed(1)}</p>
+      <StarRating value={Math.round(average)} size="sm" />
+      <p className="mt-1 text-xs text-muted-foreground">({total} Review{total !== 1 ? 's' : ''})</p>
+
+      <div className="mt-5 space-y-1.5">
         {[5, 4, 3, 2, 1].map((star) => {
-          const count = stats.distribution[star] ?? 0;
-          const pct = stats.total > 0 ? (count / stats.total) * 100 : 0;
+          const count = distribution[star] ?? 0;
+          const pct = total > 0 ? Math.round((count / total) * 100) : 0;
           return (
             <div key={star} className="flex items-center gap-2 text-xs">
               <span className="w-3 text-right text-muted-foreground">{star}</span>
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <div className="flex-1 h-1.5 rounded-full bg-secondary overflow-hidden">
+              <div className="h-1.5 w-28 rounded-full bg-secondary overflow-hidden sm:w-36">
                 <div className="h-full rounded-full bg-amber-400 transition-all" style={{ width: `${pct}%` }} />
               </div>
-              <span className="w-4 text-muted-foreground">{count}</span>
+              <span className="w-8 text-muted-foreground">{pct}%</span>
             </div>
           );
         })}
@@ -122,20 +123,27 @@ function ReviewCard({ review }: { review: Review }) {
   );
 }
 
-function WriteReviewForm({ productId, onDone }: { productId: string; onDone: () => void }) {
+function WriteReviewForm({ productId }: { productId: string }) {
+  const { user } = useAuth();
   const createReview = useCreateReview();
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState('');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rating === 0) { setError('Please select a rating'); return; }
+    if (!user) { setError('Please sign in to submit a review.'); return; }
+    if (!rating) { setError('Please select a rating.'); return; }
     setError('');
     try {
-      await createReview.mutateAsync({ productId, rating, title: title || undefined, body: body || undefined });
-      onDone();
+      await createReview.mutateAsync({ productId, rating: Number(rating), title: title || undefined, body: body || undefined });
+      setRating('');
+      setTitle('');
+      setBody('');
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 4000);
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
       setError(msg ?? 'Failed to submit review');
@@ -143,57 +151,72 @@ function WriteReviewForm({ productId, onDone }: { productId: string; onDone: () 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="text-sm font-medium">Your Rating</label>
-        <div className="mt-1.5">
-          <StarRating value={rating} size="lg" onChange={setRating} />
+    <div>
+      <h3 className="font-display text-lg font-bold border-b-2 border-primary pb-2 inline-block">Submit Your Review</h3>
+      <p className="mt-4 text-sm text-muted-foreground">
+        Your email address will not be published. Required fields are marked *
+      </p>
+
+      <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <div>
+          <label className="text-sm font-medium">Write your opinion about the product *</label>
+          <textarea
+            rows={5}
+            className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            placeholder="Write Your Review Here..."
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
         </div>
-      </div>
-      <div>
-        <label className="text-sm font-medium">Title (optional)</label>
-        <input
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-          placeholder="Sum it up in a sentence"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div>
-        <label className="text-sm font-medium">Review (optional)</label>
-        <textarea
-          rows={4}
-          className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-          placeholder="Share your experience with this product"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        />
-      </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      <div className="flex gap-3">
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-secondary"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={createReview.isPending}
-          className="rounded-lg bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-        >
-          {createReview.isPending ? 'Submitting…' : 'Submit Review'}
-        </button>
-      </div>
-    </form>
+
+        <div>
+          <label className="text-sm font-medium">Title (optional)</label>
+          <input
+            className="mt-1.5 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Sum it up in a sentence"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <label className="text-sm font-medium">Your Rating: *</label>
+            <select
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              className="mt-1.5 block w-48 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">Select One</option>
+              {[5, 4, 3, 2, 1].map((n) => (
+                <option key={n} value={n}>{n} — {['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][n - 1]}</option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={createReview.isPending}
+            className="rounded-lg bg-foreground px-6 py-2.5 text-sm font-semibold uppercase tracking-wide text-background hover:bg-foreground/90 disabled:opacity-50"
+          >
+            {createReview.isPending ? 'Submitting…' : 'Submit Review'}
+          </button>
+        </div>
+
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        {submitted && <p className="text-sm text-primary">Thanks! Your review has been submitted.</p>}
+        {!user && (
+          <p className="text-sm text-muted-foreground">
+            <Link href="/login" className="text-primary hover:underline">Sign in</Link> to submit a review.
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
 
 function ReviewsSection({ productId }: { productId: string }) {
-  const { user } = useAuth();
   const [page, setPage] = useState(1);
-  const [showForm, setShowForm] = useState(false);
 
   const { data } = useProductReviews(productId, page);
   const reviews = data?.data.reviews ?? [];
@@ -201,33 +224,14 @@ function ReviewsSection({ productId }: { productId: string }) {
 
   return (
     <section className="mt-16">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-2xl font-bold">Customer Reviews</h2>
-        {user && !showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-          >
-            Write a Review
-          </button>
-        )}
-        {!user && (
-          <Link href="/login" className="text-sm text-primary hover:underline">
-            Sign in to review
-          </Link>
-        )}
+      <h2 className="mb-6 font-display text-2xl font-bold">Customer Reviews</h2>
+
+      <div className="grid gap-10 rounded-2xl border border-border bg-card p-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] sm:p-8">
+        <RatingSummary productId={productId} />
+        <WriteReviewForm productId={productId} />
       </div>
 
-      <RatingSummary productId={productId} />
-
-      {showForm && (
-        <div className="mt-6 rounded-xl border border-border bg-background p-6">
-          <h3 className="font-semibold mb-4">Write a Review</h3>
-          <WriteReviewForm productId={productId} onDone={() => setShowForm(false)} />
-        </div>
-      )}
-
-      <div className="mt-6">
+      <div className="mt-10">
         {reviews.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border py-12 text-center">
             <Star className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />

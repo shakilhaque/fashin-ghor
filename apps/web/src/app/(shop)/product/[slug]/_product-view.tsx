@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Minus, Plus, ShoppingCart, Star, CheckCircle2, MessageCircle, Phone, Facebook, Twitter, Linkedin } from 'lucide-react';
-import { useProduct } from '@/hooks/use-products';
+import { useProduct, useProducts } from '@/hooks/use-products';
 import { useAddToCart } from '@/hooks/use-cart';
 import { useAuth } from '@/contexts/auth-context';
 import {
@@ -15,7 +15,9 @@ import {
   type Review,
 } from '@/hooks/use-reviews';
 import { Button } from '@/components/ui/button';
+import { ProductCard } from '@/components/shop/product-card';
 import { cn, formatPrice } from '@/lib/utils';
+import { ArrowRight } from 'lucide-react';
 
 const WEB_URL = process.env.NEXT_PUBLIC_WEB_URL || 'http://localhost:3000';
 const STORE_WHATSAPP = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || '+8801700000000').replace(/[^\d]/g, '');
@@ -273,6 +275,29 @@ function ProductRatingBadge({ productId }: { productId: string }) {
         {stats.average.toFixed(1)} ({stats.total})
       </span>
     </div>
+  );
+}
+
+function RelatedProducts({ categorySlug, currentProductId }: { categorySlug: string; currentProductId: string }) {
+  const { data } = useProducts({ categorySlug, limit: 6, sortBy: 'createdAt', sortOrder: 'desc' });
+  const related = (data?.products ?? []).filter((p) => p.id !== currentProductId).slice(0, 5);
+
+  if (related.length === 0) return null;
+
+  return (
+    <section className="mt-16">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="font-display text-2xl font-bold">Related Products</h2>
+        <Link href={`/category/${categorySlug}`} className="flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+          More Products <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 sm:gap-4">
+        {related.map((p) => (
+          <ProductCard key={p.id} product={p} />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -596,6 +621,10 @@ export function ProductView({ slug }: { slug: string }) {
       </div>
 
       <ReviewsSection productId={product.id} />
+
+      {product.category && (
+        <RelatedProducts categorySlug={product.category.slug} currentProductId={product.id} />
+      )}
     </main>
   );
 }

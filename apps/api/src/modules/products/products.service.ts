@@ -239,6 +239,7 @@ export class ProductsService {
       ...(query.gender && { gender: query.gender }),
       ...(query.isFeatured !== undefined && { isFeatured: query.isFeatured === 'true' }),
       ...(query.isOnSale === 'true' && { discount: { gt: 0 } }),
+      ...(query.isBundle !== undefined && { isBundle: query.isBundle === 'true' }),
       ...((query.minPrice || query.maxPrice) && {
         price: {
           ...(query.minPrice && { gte: Number(query.minPrice) }),

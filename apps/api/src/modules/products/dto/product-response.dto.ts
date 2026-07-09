@@ -30,6 +30,7 @@ export class ProductResponseDto {
   @ApiProperty() discount: number;
   @ApiProperty() stock: number;
   @ApiProperty() isFeatured: boolean;
+  @ApiProperty() isBundle: boolean;
   @ApiProperty() isActive: boolean;
   @ApiProperty({ type: [ProductImageResponseDto] }) images: ProductImageResponseDto[];
   @ApiProperty({ type: [ProductVariantResponseDto] }) variants: ProductVariantResponseDto[];

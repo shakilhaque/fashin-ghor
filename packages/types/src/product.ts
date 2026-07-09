@@ -58,6 +58,7 @@ export interface Product {
   images: ProductImage[];
   variants: ProductVariant[];
   isFeatured: boolean;
+  isBundle: boolean;
   isActive: boolean;
   averageRating: number;
   reviewCount: number;
@@ -77,4 +78,5 @@ export interface ProductListQuery {
   gender?: string;
   isFeatured?: boolean;
   isOnSale?: boolean;
+  isBundle?: boolean;
 }

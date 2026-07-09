@@ -80,13 +80,14 @@ interface ProductForm {
   gender: string;
   isActive: boolean;
   isFeatured: boolean;
+  isBundle: boolean;
   images: string[];
 }
 
 const emptyForm = (): ProductForm => ({
   name: '', sku: '', description: '', price: '', comparePrice: '',
   stock: '0', categoryId: '', brandId: '', gender: '', isActive: true,
-  isFeatured: false, images: [],
+  isFeatured: false, isBundle: false, images: [],
 });
 
 function productToForm(p: Product): ProductForm {
@@ -103,6 +104,7 @@ function productToForm(p: Product): ProductForm {
     gender: p.gender ?? '',
     isActive: p.isActive ?? true,
     isFeatured: p.isFeatured ?? false,
+    isBundle: p.isBundle ?? false,
     images: imgs.map((i) => i.url),
   };
 }
@@ -173,6 +175,7 @@ export default function AdminProductsPage() {
       gender: form.gender || undefined,
       isActive: form.isActive,
       isFeatured: form.isFeatured,
+      isBundle: form.isBundle,
       images: form.images.map((url, i) => ({ url, position: i, altText: form.name })),
     };
     if (editTarget) {
@@ -392,6 +395,10 @@ export default function AdminProductsPage() {
               <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input type="checkbox" checked={form.isFeatured} onChange={(e) => setForm((f) => ({ ...f, isFeatured: e.target.checked }))} className="h-4 w-4 rounded accent-primary" />
                 Featured (show on homepage)
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input type="checkbox" checked={form.isBundle} onChange={(e) => setForm((f) => ({ ...f, isBundle: e.target.checked }))} className="h-4 w-4 rounded accent-primary" />
+                Combo Deal (show in Exclusive Combo Deals)
               </label>
             </div>
 

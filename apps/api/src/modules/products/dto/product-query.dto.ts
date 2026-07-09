@@ -44,6 +44,11 @@ export class ProductQueryDto extends PaginationDto {
   @IsBooleanString()
   isOnSale?: string;
 
+  @ApiPropertyOptional({ example: 'true', description: 'Filter to bundle/combo products' })
+  @IsOptional()
+  @IsBooleanString()
+  isBundle?: string;
+
   @ApiPropertyOptional({ enum: ['price', 'createdAt', 'name', 'rating'], default: 'createdAt' })
   @IsOptional()
   @IsIn(['price', 'createdAt', 'name', 'rating'])

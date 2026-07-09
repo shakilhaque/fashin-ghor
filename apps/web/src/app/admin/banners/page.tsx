@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { cn } from '@/lib/utils';
 
-type BannerType = 'HERO' | 'SLIDER' | 'STATIC';
+type BannerType = 'HERO' | 'SLIDER' | 'STATIC' | 'OFFER_ZONE';
 type BannerSize = 'SMALL' | 'MEDIUM' | 'LARGE';
 
 interface BannerForm {
@@ -68,12 +68,14 @@ const TYPE_LABELS: Record<BannerType, string> = {
   HERO: 'Hero',
   SLIDER: 'Slider',
   STATIC: 'Static',
+  OFFER_ZONE: 'Offer Zone',
 };
 
 const TYPE_COLORS: Record<BannerType, string> = {
   HERO: 'bg-amber-100 text-amber-700',
   SLIDER: 'bg-blue-100 text-blue-700',
   STATIC: 'bg-violet-100 text-violet-700',
+  OFFER_ZONE: 'bg-rose-100 text-rose-700',
 };
 
 export default function AdminBannersPage() {
@@ -89,6 +91,7 @@ export default function AdminBannersPage() {
   const heroes = banners.filter((b) => b.type === 'HERO');
   const sliders = banners.filter((b) => b.type === 'SLIDER');
   const statics = banners.filter((b) => b.type === 'STATIC');
+  const offerZones = banners.filter((b) => b.type === 'OFFER_ZONE');
 
   function openCreate(defaultType?: BannerType) {
     setEditTarget(null);
@@ -216,6 +219,27 @@ export default function AdminBannersPage() {
         />
       </div>
 
+      {/* Offer Zone Banners */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+            Offer Zone Banners ({offerZones.length})
+          </h2>
+          <button onClick={() => openCreate('OFFER_ZONE')} className="text-xs text-primary hover:underline">+ Add Offer Zone Banner</button>
+        </div>
+        <p className="text-xs text-muted-foreground -mt-2">
+          Shown as two promo images below "Exclusive Combo Deals" on the homepage. Set the Link URL to where you want clicks to go (e.g. /shop?isOnSale=true).
+        </p>
+        <BannerGrid
+          banners={offerZones}
+          isLoading={isLoading}
+          onEdit={openEdit}
+          onToggle={toggleActive}
+          onDelete={(id) => { if (confirm('Delete this banner?')) deleteMutation.mutate(id); }}
+          isPending={deleteMutation.isPending || updateMutation.isPending}
+        />
+      </div>
+
       {/* Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -248,6 +272,7 @@ export default function AdminBannersPage() {
                   <option value="HERO">Hero</option>
                   <option value="SLIDER">Slider</option>
                   <option value="STATIC">Static</option>
+                  <option value="OFFER_ZONE">Offer Zone</option>
                 </select>
               </div>
               <div>

@@ -863,6 +863,7 @@ enum BannerType {
   HERO
   SLIDER
   STATIC
+  OFFER_ZONE
 }
 
 enum BannerSize {

@@ -548,6 +548,7 @@ export default function HomePage() {
   const topBrands = (brands ?? []).slice(0, 6);
   const activeStories = storiesData ?? [];
   const activeBanners = bannersData ?? [];
+  const offerZoneBanners = activeBanners.filter((b) => b.type === 'OFFER_ZONE');
 
   return (
     <div className="flex flex-col">
@@ -670,6 +671,37 @@ export default function HomePage() {
             </Button>
           </div>
           <ComboDealsCarousel products={comboProducts} />
+        </section>
+      )}
+
+      {/* ── Offer Zone banners ────────────────────────────────── */}
+      {offerZoneBanners.length > 0 && (
+        <section className="mx-auto w-full max-w-7xl px-4 pb-14 sm:px-8 lg:px-12">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {offerZoneBanners.map((banner) => (
+              <Link
+                key={banner.id}
+                href={banner.linkUrl || '/shop?isOnSale=true'}
+                className="group relative block aspect-[16/9] overflow-hidden rounded-2xl bg-secondary"
+              >
+                <Image
+                  src={banner.imageUrl}
+                  alt={banner.title ?? 'Offer'}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                />
+                {(banner.title || banner.subtitle) && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent">
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      {banner.title && <p className="font-display text-lg font-bold">{banner.title}</p>}
+                      {banner.subtitle && <p className="text-sm text-white/80">{banner.subtitle}</p>}
+                    </div>
+                  </div>
+                )}
+              </Link>
+            ))}
+          </div>
         </section>
       )}
 

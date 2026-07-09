@@ -27,6 +27,24 @@ export class ProductsService {
     return this.paginate(where, query);
   }
 
+  async getBestSellers(limit: number): Promise<ProductWithRelations[]> {
+    const rankedIds = await this.productsRepository.findTopSellingIds(limit);
+    const ranked = rankedIds.length > 0 ? await this.productsRepository.findManyByIds(rankedIds) : [];
+    // Preserve sales-rank order — findMany's `id: { in }` does not guarantee it.
+    const byId = new Map(ranked.map((p) => [p.id, p]));
+    const ordered = rankedIds.map((id) => byId.get(id)).filter((p): p is ProductWithRelations => Boolean(p));
+
+    if (ordered.length < limit) {
+      const fallback = await this.productsRepository.findFallbackActive(
+        limit - ordered.length,
+        ordered.map((p) => p.id),
+      );
+      ordered.push(...fallback);
+    }
+
+    return ordered;
+  }
+
   async getBySlug(slug: string): Promise<ProductWithRelations> {
     const product = await this.productsRepository.findBySlug(slug);
     if (!product || !product.isActive) {

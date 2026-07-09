@@ -26,6 +26,17 @@ export function useProducts(query: ProductListQuery = {}) {
   });
 }
 
+export function useBestSellers(limit = 8) {
+  return useQuery({
+    queryKey: ['products', 'best-sellers', limit],
+    queryFn: async () => {
+      const { data } = await api.get('/products/best-sellers', { params: { limit } });
+      return data.data.products as Product[];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function useProduct(slug: string) {
   return useQuery({
     queryKey: ['products', 'detail', slug],

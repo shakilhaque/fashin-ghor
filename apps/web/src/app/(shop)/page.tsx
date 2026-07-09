@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight, Star, Truck, RotateCcw, Shield, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCategoryTree } from '@/hooks/use-categories';
-import { useProducts } from '@/hooks/use-products';
+import { useProducts, useBestSellers } from '@/hooks/use-products';
 import { useBrands } from '@/hooks/use-brands';
 import { useCart, useAddToCart } from '@/hooks/use-cart';
 import { useStories } from '@/hooks/use-stories';
@@ -160,6 +160,73 @@ function ProductCard({ product }: { product: Product }) {
             onClick={() => addToCart.mutate({ productId: product.id, quantity: 1 })}
           >
             {inCart ? '✓ Added' : 'Add to Cart'}
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Top selling card (wide layout: image left, details right) ──────────────────
+
+function TopSellingCard({ product }: { product: Product }) {
+  const addToCart = useAddToCart();
+  const image = (product.images as { url: string; altText?: string | null }[] | undefined)?.[0];
+  const hasVariants = (product.variants as unknown[])?.length > 0;
+  const saveAmount = product.comparePrice ? Math.round(product.comparePrice - product.price) : 0;
+
+  return (
+    <div className="flex gap-4 rounded-2xl border border-border bg-card p-3 sm:gap-6 sm:p-4">
+      <Link href={`/product/${product.slug}`} className="relative block aspect-square w-32 shrink-0 overflow-hidden rounded-xl bg-secondary sm:w-44">
+        {image ? (
+          <Image
+            src={image.url}
+            alt={image.altText ?? product.name}
+            fill
+            className="object-cover"
+            sizes="176px"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted-foreground">
+            <ShoppingBag className="h-8 w-8 opacity-20" />
+          </div>
+        )}
+      </Link>
+
+      <div className="flex flex-1 flex-col justify-center min-w-0">
+        <Link href={`/product/${product.slug}`} className="line-clamp-2 font-medium leading-snug hover:text-primary">
+          {product.name}
+        </Link>
+
+        <div className="mt-2 flex items-center gap-2">
+          <span className="font-display text-lg font-semibold text-foreground">{formatPrice(product.price)}</span>
+          {product.comparePrice && (
+            <span className="text-sm text-muted-foreground line-through">{formatPrice(product.comparePrice)}</span>
+          )}
+        </div>
+
+        {saveAmount > 0 && (
+          <span className="mt-2 inline-block w-fit rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+            Save {formatPrice(saveAmount)}
+          </span>
+        )}
+
+        {hasVariants ? (
+          <Button asChild size="sm" variant="outline" className="mt-3 w-fit">
+            <Link href={`/product/${product.slug}`}>
+              <ShoppingBag className="mr-1.5 h-3.5 w-3.5" /> Select Options
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            variant="outline"
+            className="mt-3 w-fit"
+            disabled={product.stock === 0 || addToCart.isPending}
+            onClick={() => addToCart.mutate({ productId: product.id, quantity: 1 })}
+          >
+            <ShoppingBag className="mr-1.5 h-3.5 w-3.5" />
+            {product.stock === 0 ? 'Out of Stock' : 'Order Now'}
           </Button>
         )}
       </div>
@@ -370,6 +437,7 @@ export default function HomePage() {
   const { data: featuredData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: newArrivalsData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: premiumData } = useProducts({ categorySlug: 'premium-wear', limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
+  const { data: bestSellers } = useBestSellers(6);
   const { data: brands } = useBrands();
   const { data: storiesData } = useStories();
   const { data: bannersData } = useBanners();
@@ -471,6 +539,20 @@ export default function HomePage() {
             {premiumProducts.map((product: Product) => (
               <ProductCard key={product.id} product={product} />
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Top Selling Products ─────────────────────────────── */}
+      {bestSellers && bestSellers.length > 0 && (
+        <section className="bg-secondary/40 py-14">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">
+            <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">Top Selling Products</h2>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+              {bestSellers.map((product: Product) => (
+                <TopSellingCard key={product.id} product={product} />
+              ))}
+            </div>
           </div>
         </section>
       )}

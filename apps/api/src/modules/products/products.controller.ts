@@ -44,6 +44,14 @@ export class ProductsController {
   }
 
   @Public()
+  @Get('best-sellers')
+  @ApiOperation({ summary: 'List top-selling products (by units sold), backfilled with featured products if needed' })
+  async bestSellers(@Query('limit') limit?: string) {
+    const products = await this.productsService.getBestSellers(limit ? Number(limit) : 8);
+    return { message: 'Best sellers retrieved', data: { products } };
+  }
+
+  @Public()
   @Get(':slug')
   @ApiOperation({ summary: 'Get a product by slug' })
   async getBySlug(@Param('slug') slug: string) {

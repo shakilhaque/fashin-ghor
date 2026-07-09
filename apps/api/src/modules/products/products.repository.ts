@@ -56,6 +56,30 @@ export class ProductsRepository {
     return this.prisma.orderItem.count({ where: { productId } });
   }
 
+  async findTopSellingIds(limit: number): Promise<string[]> {
+    const grouped = await this.prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: { order: { status: { notIn: ['CANCELLED', 'REFUNDED'] } } },
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: limit,
+    });
+    return grouped.map((g) => g.productId);
+  }
+
+  findManyByIds(ids: string[]): Promise<ProductWithRelations[]> {
+    return this.prisma.product.findMany({ where: { id: { in: ids }, isActive: true }, include: detailInclude });
+  }
+
+  findFallbackActive(limit: number, excludeIds: string[]): Promise<ProductWithRelations[]> {
+    return this.prisma.product.findMany({
+      where: { isActive: true, id: { notIn: excludeIds } },
+      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+      take: limit,
+      include: detailInclude,
+    });
+  }
+
   create(data: Prisma.ProductCreateInput): Promise<ProductWithRelations> {
     return this.prisma.product.create({ data, include: detailInclude });
   }

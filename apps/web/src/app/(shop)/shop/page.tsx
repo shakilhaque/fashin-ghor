@@ -68,6 +68,8 @@ function ShopContent() {
 
   const [sortBy, sortOrder] = sortKey.split('-') as [string, string];
 
+  const isOnSale = searchParams.get('isOnSale') === 'true';
+
   const { data, isLoading } = useProducts({
     page,
     limit: 12,
@@ -78,6 +80,7 @@ function ShopContent() {
     sortOrder: sortOrder as 'asc' | 'desc',
     minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
     maxPrice: priceRange[1] < 10000 ? priceRange[1] : undefined,
+    isOnSale: isOnSale || undefined,
   });
 
   const products = data?.products ?? [];
@@ -209,7 +212,9 @@ function ShopContent() {
       {/* Header bar */}
       <div className="border-b border-border bg-secondary/30 px-4 py-4 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <h1 className="font-display text-3xl font-bold uppercase tracking-widest">All Products</h1>
+          <h1 className="font-display text-3xl font-bold uppercase tracking-widest">
+            {isOnSale ? 'Offer Zone' : 'All Products'}
+          </h1>
           <nav className="mt-1 text-sm text-muted-foreground">
             <a href="/" className="hover:text-foreground">Home</a>
             <span className="mx-1.5">/</span>

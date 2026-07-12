@@ -631,14 +631,14 @@ export default function HomePage() {
               <Link
                 key={banner.id}
                 href={banner.linkUrl || '/shop?isOnSale=true'}
-                className="group relative mx-auto block w-fit overflow-hidden rounded-2xl bg-secondary"
+                className="group relative mx-auto block aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl bg-secondary sm:max-w-none"
               >
                 <Image
                   src={banner.imageUrl}
                   alt={banner.title ?? 'Offer'}
-                  width={400}
-                  height={533}
-                  className="h-64 w-auto transition-transform duration-500 group-hover:scale-105 sm:h-80"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                 />
                 {(banner.title || banner.subtitle) && (
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent">

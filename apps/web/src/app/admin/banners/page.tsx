@@ -368,9 +368,9 @@ function BannerGrid({
 }) {
   if (isLoading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-wrap gap-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="aspect-video animate-pulse rounded-xl bg-secondary" />
+          <div key={i} className="h-40 w-56 animate-pulse rounded-xl bg-secondary" />
         ))}
       </div>
     );
@@ -383,11 +383,11 @@ function BannerGrid({
     );
   }
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="flex flex-wrap gap-4">
       {banners.map((b) => (
-        <div key={b.id} className={cn('group relative overflow-hidden rounded-xl border border-border bg-card', !b.isActive && 'opacity-60')}>
-          <div className="relative h-40 bg-secondary">
-            <Image src={b.imageUrl} alt={b.title ?? 'Banner'} fill className="object-contain" sizes="400px" />
+        <div key={b.id} className={cn('group relative w-fit min-w-[200px] overflow-hidden rounded-xl border border-border bg-card', !b.isActive && 'opacity-60')}>
+          <div className="relative flex h-40 items-center justify-center bg-secondary">
+            <Image src={b.imageUrl} alt={b.title ?? 'Banner'} width={300} height={400} className="h-40 w-auto" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
           </div>
           <div className="p-3">

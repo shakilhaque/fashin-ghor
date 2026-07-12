@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingBag, ArrowRight, ChevronLeft, ChevronRight, Star, Truck, RotateCcw, Shield, Headphones, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useCategoryTree } from '@/hooks/use-categories';
 import { useProducts, useBestSellers } from '@/hooks/use-products';
 import { useBrands } from '@/hooks/use-brands';
 import { useCart, useAddToCart } from '@/hooks/use-cart';
@@ -15,7 +14,7 @@ import { StoriesCarousel } from '@/components/stories/story-carousel';
 import { StoryViewer } from '@/components/stories/story-viewer';
 import { PromoBannerSection } from '@/components/home/promo-banner-section';
 import { formatPrice, cn } from '@/lib/utils';
-import type { Product, Category, Story } from '@ecommerce/types';
+import type { Product, Story } from '@ecommerce/types';
 
 // ── Hero slides ───────────────────────────────────────────────────────────────
 
@@ -54,27 +53,6 @@ const HERO_SLIDES = [
     img: null,
   },
 ];
-
-// ── Category icon map ─────────────────────────────────────────────────────────
-
-const CATEGORY_COLORS: Record<string, string> = {
-  default: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  women: 'bg-rose-50 text-rose-700 border-rose-200',
-  men: 'bg-blue-50 text-blue-700 border-blue-200',
-  kids: 'bg-amber-50 text-amber-700 border-amber-200',
-  accessories: 'bg-purple-50 text-purple-700 border-purple-200',
-  ethnic: 'bg-orange-50 text-orange-700 border-orange-200',
-};
-
-function getCategoryColor(name: string) {
-  const lower = name.toLowerCase();
-  if (lower.includes('women') || lower.includes('girl')) return CATEGORY_COLORS.women;
-  if (lower.includes('men') || lower.includes('boy')) return CATEGORY_COLORS.men;
-  if (lower.includes('kid') || lower.includes('child')) return CATEGORY_COLORS.kids;
-  if (lower.includes('access') || lower.includes('bag') || lower.includes('jewel')) return CATEGORY_COLORS.accessories;
-  if (lower.includes('ethnic') || lower.includes('saree') || lower.includes('salwar')) return CATEGORY_COLORS.ethnic;
-  return CATEGORY_COLORS.default;
-}
 
 // ── Product card ──────────────────────────────────────────────────────────────
 
@@ -527,7 +505,6 @@ function SectionHeader({ title, subtitle, href, linkLabel = 'View All' }: { titl
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const { data: categories } = useCategoryTree();
   const { data: featuredData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: newArrivalsData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: premiumData } = useProducts({ categorySlug: 'premium-wear', limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
@@ -544,7 +521,6 @@ export default function HomePage() {
   const premiumProducts = premiumData?.products ?? [];
   const comboProducts = comboData?.products ?? [];
   const newArrivals = (newArrivalsData?.products ?? []).slice(4, 8);
-  const topCategories = (categories ?? []).slice(0, 8);
   const topBrands = (brands ?? []).slice(0, 6);
   const activeStories = storiesData ?? [];
   const activeBanners = bannersData ?? [];
@@ -571,33 +547,6 @@ export default function HomePage() {
 
       {/* ── Trust badges ─────────────────────────────────────── */}
       <TrustBadges />
-
-      {/* ── Shop by Category ─────────────────────────────────── */}
-      {topCategories.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
-          <SectionHeader title="Shop by Category" subtitle="Find exactly what you're looking for" href="/shop" />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
-            {topCategories.map((cat: Category) => {
-              const colorClass = getCategoryColor(cat.name);
-              return (
-                <Link
-                  key={cat.id}
-                  href={`/category/${cat.slug}`}
-                  className={cn(
-                    'flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition-all hover:shadow-md hover:-translate-y-0.5',
-                    colorClass,
-                  )}
-                >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60 text-xl">
-                    {cat.name.slice(0, 1)}
-                  </div>
-                  <span className="text-xs font-semibold leading-tight">{cat.name}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* ── Promo banner ─────────────────────────────────────── */}
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">

@@ -386,7 +386,7 @@ function BannerGrid({
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {banners.map((b) => (
         <div key={b.id} className={cn('group relative overflow-hidden rounded-xl border border-border bg-card', !b.isActive && 'opacity-60')}>
-          <div className="relative aspect-video bg-secondary">
+          <div className="relative h-40 bg-secondary">
             <Image src={b.imageUrl} alt={b.title ?? 'Banner'} fill className="object-cover" sizes="400px" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
           </div>

@@ -631,7 +631,7 @@ export default function HomePage() {
               <Link
                 key={banner.id}
                 href={banner.linkUrl || '/shop?isOnSale=true'}
-                className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-secondary sm:aspect-[3/4]"
+                className="group relative block h-64 overflow-hidden rounded-2xl bg-secondary sm:h-80"
               >
                 <Image
                   src={banner.imageUrl}

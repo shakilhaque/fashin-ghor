@@ -47,7 +47,10 @@ export function useCreateBanner() {
       const { data } = await api.post('/banners', payload);
       return data.data as PromoBanner;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'banners'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'banners'] });
+      qc.invalidateQueries({ queryKey: ['banners', 'active'] });
+    },
   });
 }
 

@@ -256,7 +256,7 @@ export default function AdminBannersPage() {
                   onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
                   folder="banners"
                   label="Upload Banner Image"
-                  aspect="landscape"
+                  aspect={form.type === 'OFFER_ZONE' ? 'portrait' : 'landscape'}
                 />
               </div>
             </div>

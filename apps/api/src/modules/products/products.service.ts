@@ -94,7 +94,7 @@ export class ProductsService {
       costPrice: dto.costPrice,
       price: dto.price,
       comparePrice: dto.comparePrice,
-      discount: dto.discount,
+      discount: dto.discount ?? this.computeDiscountPct(dto.price, dto.comparePrice),
       vat: dto.vat,
       stock: dto.stock,
       isFeatured: dto.isFeatured,
@@ -179,7 +179,14 @@ export class ProductsService {
       costPrice: dto.costPrice,
       price: dto.price,
       comparePrice: dto.comparePrice,
-      discount: dto.discount,
+      discount:
+        dto.discount ??
+        (dto.price !== undefined || dto.comparePrice !== undefined
+          ? this.computeDiscountPct(
+              dto.price ?? existing.price,
+              dto.comparePrice !== undefined ? dto.comparePrice : existing.comparePrice,
+            )
+          : undefined),
       vat: dto.vat,
       stock: dto.stock,
       isFeatured: dto.isFeatured,
@@ -222,6 +229,14 @@ export class ProductsService {
     ]);
 
     return { data, total };
+  }
+
+  // The admin form only ever sets price/comparePrice — discount has no input of
+  // its own — so it must be derived here, otherwise it stays 0 forever and the
+  // isOnSale filter (which reads discount) never matches anything.
+  private computeDiscountPct(price?: number, comparePrice?: number | null): number {
+    if (!comparePrice || price === undefined || comparePrice <= price) return 0;
+    return Math.round(((comparePrice - price) / comparePrice) * 100);
   }
 
   private buildWhere(query: ProductQueryDto, { activeOnly }: { activeOnly: boolean }): Prisma.ProductWhereInput {

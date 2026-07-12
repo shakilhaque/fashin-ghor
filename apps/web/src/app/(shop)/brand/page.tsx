@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { useBrands } from '@/hooks/use-brands';
+import { Container } from '@/components/layout/container';
 
 export default function BrandListingPage() {
   const { data: brands, isLoading } = useBrands();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-12">
+    <Container as="main" className="py-12">
       <nav className="mb-6 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">
           Home
@@ -45,6 +46,6 @@ export default function BrandListingPage() {
           </Link>
         ))}
       </div>
-    </main>
+    </Container>
   );
 }

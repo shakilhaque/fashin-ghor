@@ -8,6 +8,7 @@ import { useCart } from '@/hooks/use-cart';
 import { Button } from '@/components/ui/button';
 import { CategoryMegaMenu } from './category-mega-menu';
 import { NotificationBell } from './notification-bell';
+import { Container } from './container';
 import { cn } from '@/lib/utils';
 
 const STAFF_ROLES = ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'SUPPORT', 'WAREHOUSE'];
@@ -44,7 +45,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4">
+      <Container className="flex items-center justify-between gap-6 py-4">
         <Link href="/" className="shrink-0 font-display text-2xl font-bold text-foreground">
           Fashion <span className="text-primary">Ghor</span>
         </Link>
@@ -162,7 +163,7 @@ export function SiteHeader() {
             </div>
           )}
         </div>
-      </div>
+      </Container>
     </header>
   );
 }

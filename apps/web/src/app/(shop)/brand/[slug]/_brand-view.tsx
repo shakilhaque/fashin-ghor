@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useBrand } from '@/hooks/use-brands';
 import { useProducts } from '@/hooks/use-products';
 import { ProductCard } from '@/components/shop/product-card';
+import { Container } from '@/components/layout/container';
 
 export function BrandView({ slug }: { slug: string }) {
   const { data: brand, isLoading, isError } = useBrand(slug);
@@ -30,7 +31,7 @@ export function BrandView({ slug }: { slug: string }) {
   const products = productsData?.products ?? [];
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
+    <Container as="main" className="py-12">
       <nav className="mb-6 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">Home</Link>
         {' / '}
@@ -68,6 +69,6 @@ export function BrandView({ slug }: { slug: string }) {
           ))}
         </div>
       </div>
-    </main>
+    </Container>
   );
 }

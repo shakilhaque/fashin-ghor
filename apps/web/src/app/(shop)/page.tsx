@@ -13,6 +13,7 @@ import { useBanners, type PromoBanner } from '@/hooks/use-banners';
 import { StoriesCarousel } from '@/components/stories/story-carousel';
 import { StoryViewer } from '@/components/stories/story-viewer';
 import { PromoBannerSection } from '@/components/home/promo-banner-section';
+import { Container } from '@/components/layout/container';
 import { formatPrice, cn } from '@/lib/utils';
 import type { Product, Story } from '@ecommerce/types';
 
@@ -346,7 +347,7 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
-          <div className={cn('relative mx-auto flex max-w-7xl items-center px-4 py-16 sm:px-8 lg:px-12', heightClass)}>
+          <Container className={cn('relative flex items-center py-16', heightClass)}>
             <div className="max-w-xl">
               {banner.badgeText && (
                 <span className="mb-4 inline-block rounded-full bg-amber-400 px-3 py-1 text-xs font-semibold text-black">
@@ -377,7 +378,7 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
                 </Button>
               </div>
             </div>
-          </div>
+          </Container>
         </div>
 
         {banners.length > 1 && (
@@ -391,7 +392,7 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
 
   return (
     <section className={`relative overflow-hidden bg-gradient-to-br ${slide.bg} transition-all duration-700`}>
-      <div className="mx-auto flex min-h-[480px] max-w-7xl items-center px-4 py-16 sm:min-h-[560px] sm:px-8 lg:px-12">
+      <Container className="flex min-h-[480px] items-center py-16 sm:min-h-[560px]">
         <div className="max-w-xl">
           {/* Tag */}
           <span className={`inline-block rounded-full ${slide.accent} px-3 py-1 text-xs font-semibold text-black mb-4`}>
@@ -424,7 +425,7 @@ function HeroCarousel({ banners }: { banners: PromoBanner[] }) {
 
         {/* Decorative circle */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-white/5 blur-3xl pointer-events-none" />
-      </div>
+      </Container>
 
       <HeroControls active={active} count={HERO_SLIDES.length} onPrev={() => setActive((p) => (p - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)} onNext={() => setActive((p) => (p + 1) % HERO_SLIDES.length)} onSelect={setActive} />
     </section>
@@ -467,7 +468,7 @@ function TrustBadges() {
 
   return (
     <section className="border-b border-border bg-secondary/40">
-      <div className="mx-auto max-w-7xl px-4 py-5 sm:px-8 lg:px-12">
+      <Container className="py-5">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {items.map(({ Icon, title, sub }) => (
             <div key={title} className="flex items-center gap-3">
@@ -481,7 +482,7 @@ function TrustBadges() {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
@@ -549,7 +550,7 @@ export default function HomePage() {
       <TrustBadges />
 
       {/* ── Promo banner ─────────────────────────────────────── */}
-      <section className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">
+      <Container as="section">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 p-8 text-white">
             <p className="text-sm font-semibold uppercase tracking-wider text-emerald-200">Special Offer</p>
@@ -570,11 +571,11 @@ export default function HomePage() {
             <div className="absolute -bottom-6 -right-6 h-28 w-28 rounded-full bg-white/5" />
           </div>
         </div>
-      </section>
+      </Container>
 
       {/* ── Premium ────────────────────────────────────────────── */}
       {premiumProducts.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+        <Container as="section" className="py-14">
           <SectionHeader
             title="Premium"
             subtitle="Our finest premium wear collection"
@@ -586,26 +587,26 @@ export default function HomePage() {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        </section>
+        </Container>
       )}
 
       {/* ── Top Selling Products ─────────────────────────────── */}
       {bestSellers && bestSellers.length > 0 && (
         <section className="bg-secondary/40 py-14">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">
+          <Container>
             <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">Top Selling Products</h2>
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
               {bestSellers.map((product: Product) => (
                 <TopSellingCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
+          </Container>
         </section>
       )}
 
       {/* ── Exclusive Combo Deals ─────────────────────────────── */}
       {comboProducts.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+        <Container as="section" className="py-14">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -620,12 +621,12 @@ export default function HomePage() {
             </Button>
           </div>
           <ComboDealsCarousel products={comboProducts} />
-        </section>
+        </Container>
       )}
 
       {/* ── Offer Zone banners ────────────────────────────────── */}
       {offerZoneBanners.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 pb-14 sm:px-8 lg:px-12">
+        <Container as="section" className="pb-14">
           <div className="grid gap-4 sm:grid-cols-2">
             {offerZoneBanners.map((banner) => (
               <Link
@@ -651,12 +652,12 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </section>
+        </Container>
       )}
 
       {/* ── Featured Products ─────────────────────────────────── */}
       {featuredProducts.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+        <Container as="section" className="py-14">
           <SectionHeader
             title="Featured Products"
             subtitle="Handpicked styles for every occasion"
@@ -667,13 +668,13 @@ export default function HomePage() {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        </section>
+        </Container>
       )}
 
       {/* ── New Arrivals ──────────────────────────────────────── */}
       {newArrivals.length > 0 && (
         <section className="bg-secondary/40 py-14">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-12">
+          <Container>
             <SectionHeader
               title="New Arrivals"
               subtitle="Fresh styles added every week"
@@ -685,13 +686,13 @@ export default function HomePage() {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </div>
+          </Container>
         </section>
       )}
 
       {/* ── Brands ───────────────────────────────────────────── */}
       {topBrands.length > 0 && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+        <Container as="section" className="py-14">
           <SectionHeader title="Our Brands" subtitle="Curated labels you can trust" href="/brand" />
           <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">
             {topBrands.map((brand) => (
@@ -711,7 +712,7 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </section>
+        </Container>
       )}
 
       {/* ── Newsletter ────────────────────────────────────────── */}

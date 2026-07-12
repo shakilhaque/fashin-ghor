@@ -7,6 +7,7 @@ import { useProducts } from '@/hooks/use-products';
 import { useCategoryTree } from '@/hooks/use-categories';
 import { useBrands } from '@/hooks/use-brands';
 import { ProductCard } from '@/components/shop/product-card';
+import { Container } from '@/components/layout/container';
 import { cn } from '@/lib/utils';
 import type { Brand, Category } from '@ecommerce/types';
 
@@ -212,8 +213,8 @@ function ShopContent() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header bar */}
-      <div className="border-b border-border bg-secondary/30 px-4 py-4 sm:px-8">
-        <div className="mx-auto max-w-7xl">
+      <div className="border-b border-border bg-secondary/30 py-4">
+        <Container>
           <h1 className="font-display text-3xl font-bold uppercase tracking-widest">
             {isOnSale ? 'Offer Zone' : isBundle ? 'Exclusive Combo Deals' : 'All Products'}
           </h1>
@@ -222,10 +223,10 @@ function ShopContent() {
             <span className="mx-1.5">/</span>
             <span className="text-foreground">Shop</span>
           </nav>
-        </div>
+        </Container>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-8">
+      <Container className="py-8">
         {/* Mobile filter toggle */}
         <div className="mb-4 flex items-center justify-between sm:hidden">
           <button
@@ -349,7 +350,7 @@ function ShopContent() {
             )}
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

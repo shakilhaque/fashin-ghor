@@ -10,6 +10,7 @@ import { useShippingRates, useCheckoutSummary, usePlaceOrder } from '@/hooks/use
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Container } from '@/components/layout/container';
 import { cn, formatPrice } from '@/lib/utils';
 import type { Address } from '@ecommerce/types';
 import type { ShippingRate } from '@/hooks/use-checkout';
@@ -125,7 +126,7 @@ export default function CheckoutPage() {
   const selectedRate = rates?.find((r) => r.id === selectedRateId);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
+    <Container as="main" className="py-12">
       <h1 className="mb-8 font-display text-3xl font-bold">Checkout</h1>
 
       {/* Step indicator */}
@@ -375,7 +376,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </main>
+    </Container>
   );
 }
 

@@ -7,6 +7,7 @@ import { useCategory } from '@/hooks/use-categories';
 import { useProducts } from '@/hooks/use-products';
 import { useBrands } from '@/hooks/use-brands';
 import { ProductCard } from '@/components/shop/product-card';
+import { Container } from '@/components/layout/container';
 import { cn } from '@/lib/utils';
 import type { Brand, Category } from '@ecommerce/types';
 
@@ -136,20 +137,20 @@ export function CategoryView({ slug }: { slug: string }) {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center text-muted-foreground">
+      <Container className="py-20 text-center text-muted-foreground">
         Loading…
-      </div>
+      </Container>
     );
   }
 
   if (isError || !category) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+      <Container className="py-20 text-center">
         <h1 className="font-display text-2xl font-semibold">Category not found</h1>
         <Link href="/" className="mt-4 inline-block text-primary hover:underline">
           Back to home
         </Link>
-      </div>
+      </Container>
     );
   }
 
@@ -255,8 +256,8 @@ export function CategoryView({ slug }: { slug: string }) {
   return (
     <div className="min-h-screen bg-background">
       {/* ── Breadcrumb ────────────────────────────────────────── */}
-      <div className="border-b border-border bg-secondary/30 px-4 py-3 sm:px-8">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="border-b border-border bg-secondary/30 py-3">
+        <Container className="flex items-center justify-between">
           <nav className="text-sm text-muted-foreground">
             <Link href="/" className="hover:text-foreground">Home</Link>
             <span className="mx-1.5 text-border">/</span>
@@ -273,7 +274,7 @@ export function CategoryView({ slug }: { slug: string }) {
           <span className="text-xs text-muted-foreground hidden sm:block">
             {totalProducts} products
           </span>
-        </div>
+        </Container>
       </div>
 
       {/* ── Category title ────────────────────────────────────── */}
@@ -287,7 +288,7 @@ export function CategoryView({ slug }: { slug: string }) {
       </div>
 
       {/* ── Body: sidebar + grid ──────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-8">
+      <Container className="py-8">
 
         {/* Mobile: filter toggle */}
         <div className="mb-4 flex items-center justify-between sm:hidden">
@@ -424,7 +425,7 @@ export function CategoryView({ slug }: { slug: string }) {
             )}
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

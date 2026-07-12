@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { Container } from './container';
 
 const STORE_PHONE = process.env.NEXT_PUBLIC_STORE_PHONE || '+8801700000000';
 
@@ -49,7 +50,7 @@ function FooterColumn({ title, links }: { title: string; links: { href: string; 
 export function SiteFooter() {
   return (
     <footer className="bg-zinc-950 text-zinc-300">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-8 lg:px-12">
+      <Container className="py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="font-display text-2xl font-bold text-white">
@@ -90,7 +91,7 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

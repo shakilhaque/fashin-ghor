@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart, useClearCart, useRemoveCartItem, useUpdateCartItem } from '@/hooks/use-cart';
 import { Button } from '@/components/ui/button';
+import { Container } from '@/components/layout/container';
 import { formatPrice } from '@/lib/utils';
 
 export default function CartPage() {
@@ -32,7 +33,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
+    <Container as="main" className="py-12">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-display text-3xl font-bold">Shopping Cart</h1>
         <button
@@ -149,6 +150,6 @@ export default function CartPage() {
           </Link>
         </div>
       </div>
-    </main>
+    </Container>
   );
 }

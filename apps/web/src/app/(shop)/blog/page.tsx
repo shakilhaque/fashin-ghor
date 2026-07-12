@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Tag, Calendar, User } from 'lucide-react';
 import { useBlogPosts, useBlogCategories, type BlogPost } from '@/hooks/use-blog';
+import { Container } from '@/components/layout/container';
 
 function PostCard({ post }: { post: BlogPost }) {
   return (
@@ -127,7 +128,7 @@ export default function BlogPage() {
         </form>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-10">
+      <Container className="py-10">
         <div className="flex gap-8 flex-col lg:flex-row">
           {/* Sidebar */}
           <aside className="w-full lg:w-52 shrink-0 space-y-6">
@@ -234,7 +235,7 @@ export default function BlogPage() {
             )}
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

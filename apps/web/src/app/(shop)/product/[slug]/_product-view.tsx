@@ -16,6 +16,7 @@ import {
 } from '@/hooks/use-reviews';
 import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/shop/product-card';
+import { Container } from '@/components/layout/container';
 import { cn, formatPrice } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 
@@ -342,7 +343,7 @@ export function ProductView({ slug }: { slug: string }) {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-12">
+    <Container as="main" className="py-12">
       <nav className="mb-6 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">Home</Link>
         {' / '}
@@ -621,6 +622,6 @@ export function ProductView({ slug }: { slug: string }) {
       {product.category && (
         <RelatedProducts categorySlug={product.category.slug} currentProductId={product.id} />
       )}
-    </main>
+    </Container>
   );
 }

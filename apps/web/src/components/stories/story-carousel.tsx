@@ -4,6 +4,7 @@ import { useRef, useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { Container } from '@/components/layout/container';
 import type { Story } from '@ecommerce/types';
 
 interface StoriesCarouselProps {
@@ -31,7 +32,7 @@ export function StoriesCarousel({ stories, onStoryClick }: StoriesCarouselProps)
 
   return (
     <section className="relative bg-background py-6 border-b border-border">
-      <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
+      <Container>
         <div className="relative">
           {/* Left arrow */}
           {canScrollLeft && (
@@ -71,7 +72,7 @@ export function StoriesCarousel({ stories, onStoryClick }: StoriesCarouselProps)
             ))}
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

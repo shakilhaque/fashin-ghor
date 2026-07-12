@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Container } from '@/components/layout/container';
 import type { PromoBanner } from '@/hooks/use-banners';
 
 interface Props {
@@ -183,7 +184,7 @@ export function PromoBannerSection({ banners }: Props) {
   // Layout variants based on available banner types
   if (sliders.length > 0 && statics.length > 0) {
     return (
-      <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-8 lg:px-12">
+      <Container as="section" className="py-6">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <SliderBanner banners={sliders} />
           <div className="flex flex-col gap-4">
@@ -194,20 +195,20 @@ export function PromoBannerSection({ banners }: Props) {
             ))}
           </div>
         </div>
-      </section>
+      </Container>
     );
   }
 
   if (sliders.length > 0) {
     return (
-      <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-8 lg:px-12">
+      <Container as="section" className="py-6">
         <SliderBanner banners={sliders} />
-      </section>
+      </Container>
     );
   }
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-8 lg:px-12">
+    <Container as="section" className="py-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {statics.map((b) => (
           <div key={b.id} style={{ aspectRatio: '4/3' }} className="relative">
@@ -215,6 +216,6 @@ export function PromoBannerSection({ banners }: Props) {
           </div>
         ))}
       </div>
-    </section>
+    </Container>
   );
 }

@@ -250,7 +250,7 @@ export default function AdminBannersPage() {
             {/* Image */}
             <div>
               <Label>Banner Image *</Label>
-              <div className="mt-1">
+              <div className={cn('mt-1', form.type === 'OFFER_ZONE' ? 'max-w-[220px]' : 'max-w-[420px]')}>
                 <ImageUploader
                   value={form.imageUrl}
                   onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}

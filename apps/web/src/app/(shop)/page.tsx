@@ -637,7 +637,7 @@ export default function HomePage() {
                   src={banner.imageUrl}
                   alt={banner.title ?? 'Offer'}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-contain transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, 50vw"
                 />
                 {(banner.title || banner.subtitle) && (

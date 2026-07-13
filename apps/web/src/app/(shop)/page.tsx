@@ -146,7 +146,7 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-// ── Top selling card (wide layout: image left, details right) ──────────────────
+// ── Top selling card (vertical layout: full image on top, details below) ──────
 
 function TopSellingCard({ product }: { product: Product }) {
   const addToCart = useAddToCart();
@@ -155,43 +155,43 @@ function TopSellingCard({ product }: { product: Product }) {
   const saveAmount = product.comparePrice ? Math.round(product.comparePrice - product.price) : 0;
 
   return (
-    <div className="flex gap-4 rounded-2xl border border-border bg-card p-3 sm:gap-6 sm:p-4">
-      <Link href={`/product/${product.slug}`} className="relative block aspect-square w-32 shrink-0 overflow-hidden rounded-xl bg-secondary sm:w-44">
+    <div className="group relative flex flex-col rounded-2xl border border-border bg-card overflow-hidden transition-shadow hover:shadow-lg">
+      {saveAmount > 0 && (
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-emerald-600 px-2 py-0.5 text-xs font-semibold text-white">
+          Save {formatPrice(saveAmount)}
+        </span>
+      )}
+
+      <Link href={`/product/${product.slug}`} className="relative block aspect-[3/4] w-full overflow-hidden bg-secondary">
         {image ? (
           <Image
             src={image.url}
             alt={image.altText ?? product.name}
             fill
-            className="object-cover"
-            sizes="176px"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            <ShoppingBag className="h-8 w-8 opacity-20" />
+            <ShoppingBag className="h-12 w-12 opacity-20" />
           </div>
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col justify-center min-w-0">
-        <Link href={`/product/${product.slug}`} className="line-clamp-2 font-medium leading-snug hover:text-primary">
+      <div className="flex flex-1 flex-col gap-1.5 p-3">
+        <Link href={`/product/${product.slug}`} className="line-clamp-2 text-sm font-medium leading-snug hover:text-primary">
           {product.name}
         </Link>
 
-        <div className="mt-2 flex items-center gap-2">
-          <span className="font-display text-lg font-semibold text-foreground">{formatPrice(product.price)}</span>
+        <div className="mt-auto flex items-center gap-2">
+          <span className="font-semibold text-foreground">{formatPrice(product.price)}</span>
           {product.comparePrice && (
-            <span className="text-sm text-muted-foreground line-through">{formatPrice(product.comparePrice)}</span>
+            <span className="text-xs text-muted-foreground line-through">{formatPrice(product.comparePrice)}</span>
           )}
         </div>
 
-        {saveAmount > 0 && (
-          <span className="mt-2 inline-block w-fit rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-            Save {formatPrice(saveAmount)}
-          </span>
-        )}
-
         {hasVariants ? (
-          <Button asChild size="sm" variant="outline" className="mt-3 w-fit">
+          <Button asChild size="sm" variant="outline" className="mt-1 w-full">
             <Link href={`/product/${product.slug}`}>
               <ShoppingBag className="mr-1.5 h-3.5 w-3.5" /> Select Options
             </Link>
@@ -200,7 +200,7 @@ function TopSellingCard({ product }: { product: Product }) {
           <Button
             size="sm"
             variant="outline"
-            className="mt-3 w-fit"
+            className="mt-1 w-full"
             disabled={product.stock === 0 || addToCart.isPending}
             onClick={() => addToCart.mutate({ productId: product.id, quantity: 1 })}
           >
@@ -595,7 +595,7 @@ export default function HomePage() {
         <section className="bg-secondary/40 py-14">
           <Container>
             <h2 className="text-center font-display text-3xl font-bold sm:text-4xl">Top Selling Products</h2>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 sm:gap-4">
               {bestSellers.map((product: Product) => (
                 <TopSellingCard key={product.id} product={product} />
               ))}

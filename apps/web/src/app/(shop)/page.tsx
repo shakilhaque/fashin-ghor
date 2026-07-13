@@ -10,12 +10,13 @@ import { useBrands } from '@/hooks/use-brands';
 import { useCart, useAddToCart } from '@/hooks/use-cart';
 import { useStories } from '@/hooks/use-stories';
 import { useBanners, type PromoBanner } from '@/hooks/use-banners';
+import { useCombos } from '@/hooks/use-combos';
 import { StoriesCarousel } from '@/components/stories/story-carousel';
 import { StoryViewer } from '@/components/stories/story-viewer';
 import { PromoBannerSection } from '@/components/home/promo-banner-section';
 import { Container } from '@/components/layout/container';
 import { formatPrice, cn } from '@/lib/utils';
-import type { Product, Story } from '@ecommerce/types';
+import type { Product, Story, Combo } from '@ecommerce/types';
 
 // ── Hero slides ───────────────────────────────────────────────────────────────
 
@@ -215,17 +216,17 @@ function TopSellingCard({ product }: { product: Product }) {
 
 // ── Combo deal card ──────────────────────────────────────────────────────────
 
-function ComboDealCard({ product }: { product: Product }) {
-  const image = (product.images as { url: string; altText?: string | null }[] | undefined)?.[0];
-  const discount = product.comparePrice
-    ? Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)
-    : product.discount;
+function ComboDealCard({ combo }: { combo: Combo }) {
+  const image = combo.imageUrl ?? combo.items[0]?.product.images[0]?.url;
+  const discount = combo.comparePrice
+    ? Math.round(((combo.comparePrice - combo.price) / combo.comparePrice) * 100)
+    : combo.discount;
 
   return (
     <div className="w-64 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card sm:w-72">
-      <Link href="/category/combos" className="relative block aspect-[4/5] w-full bg-secondary">
+      <Link href={`/combo/${combo.slug}`} className="relative block aspect-[4/5] w-full bg-secondary">
         {image ? (
-          <Image src={image.url} alt={image.altText ?? product.name} fill className="object-cover" sizes="288px" />
+          <Image src={image} alt={combo.name} fill className="object-cover" sizes="288px" />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
             <Gift className="h-10 w-10 opacity-20" />
@@ -241,33 +242,33 @@ function ComboDealCard({ product }: { product: Product }) {
         </span>
       </Link>
       <div className="p-4">
-        <Link href={`/product/${product.slug}`} className="line-clamp-2 font-medium leading-snug hover:text-primary">
-          {product.name}
+        <Link href={`/combo/${combo.slug}`} className="line-clamp-2 font-medium leading-snug hover:text-primary">
+          {combo.name}
         </Link>
         <div className="mt-2 flex items-center gap-2">
-          <span className="font-display text-lg font-semibold">{formatPrice(product.price)}</span>
-          {product.comparePrice && (
-            <span className="text-sm text-muted-foreground line-through">{formatPrice(product.comparePrice)}</span>
+          <span className="font-display text-lg font-semibold">{formatPrice(combo.price)}</span>
+          {combo.comparePrice && (
+            <span className="text-sm text-muted-foreground line-through">{formatPrice(combo.comparePrice)}</span>
           )}
         </div>
         <Button asChild size="sm" variant="outline" className="mt-3 w-full">
-          <Link href={`/product/${product.slug}`}>View Details</Link>
+          <Link href={`/combo/${combo.slug}`}>View Details</Link>
         </Button>
       </div>
     </div>
   );
 }
 
-function ComboDealsCarousel({ products }: { products: Product[] }) {
+function ComboDealsCarousel({ combos }: { combos: Combo[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activePage, setActivePage] = useState(0);
   const perPage = 4;
-  const pageCount = Math.ceil(products.length / perPage);
+  const pageCount = Math.ceil(combos.length / perPage);
 
   function scrollToPage(page: number) {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = el.scrollWidth / products.length;
+    const cardWidth = el.scrollWidth / combos.length;
     el.scrollTo({ left: cardWidth * perPage * page, behavior: 'smooth' });
     setActivePage(page);
   }
@@ -275,7 +276,7 @@ function ComboDealsCarousel({ products }: { products: Product[] }) {
   function handleScroll() {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = el.scrollWidth / products.length;
+    const cardWidth = el.scrollWidth / combos.length;
     const page = Math.round(el.scrollLeft / (cardWidth * perPage));
     setActivePage(Math.min(page, pageCount - 1));
   }
@@ -287,8 +288,8 @@ function ComboDealsCarousel({ products }: { products: Product[] }) {
         onScroll={handleScroll}
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {products.map((product) => (
-          <ComboDealCard key={product.id} product={product} />
+        {combos.map((combo) => (
+          <ComboDealCard key={combo.id} combo={combo} />
         ))}
       </div>
       {pageCount > 1 && (
@@ -510,7 +511,7 @@ export default function HomePage() {
   const { data: newArrivalsData } = useProducts({ limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: premiumData } = useProducts({ categorySlug: 'premium-wear', limit: 8, sortBy: 'createdAt', sortOrder: 'desc' });
   const { data: bestSellers } = useBestSellers(6);
-  const { data: comboData } = useProducts({ isBundle: true, limit: 10, sortBy: 'createdAt', sortOrder: 'desc' });
+  const { data: combosData } = useCombos();
   const { data: brands } = useBrands();
   const { data: storiesData } = useStories();
   const { data: bannersData } = useBanners();
@@ -520,7 +521,7 @@ export default function HomePage() {
 
   const featuredProducts = featuredData?.products ?? [];
   const premiumProducts = premiumData?.products ?? [];
-  const comboProducts = comboData?.products ?? [];
+  const combos = combosData ?? [];
   const newArrivals = (newArrivalsData?.products ?? []).slice(4, 8);
   const topBrands = (brands ?? []).slice(0, 6);
   const activeStories = storiesData ?? [];
@@ -605,7 +606,7 @@ export default function HomePage() {
       )}
 
       {/* ── Exclusive Combo Deals ─────────────────────────────── */}
-      {comboProducts.length > 0 && (
+      {combos.length > 0 && (
         <Container as="section" className="py-14">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -615,12 +616,12 @@ export default function HomePage() {
               <h2 className="font-display text-2xl font-bold sm:text-3xl">Exclusive Combo Deals</h2>
             </div>
             <Button asChild size="sm" className="rounded-full">
-              <Link href="/category/combos">
+              <Link href="/combo">
                 View All Combos <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Link>
             </Button>
           </div>
-          <ComboDealsCarousel products={comboProducts} />
+          <ComboDealsCarousel combos={combos} />
         </Container>
       )}
 

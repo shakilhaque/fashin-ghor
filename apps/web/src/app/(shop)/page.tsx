@@ -223,7 +223,7 @@ function ComboDealCard({ product }: { product: Product }) {
 
   return (
     <div className="w-64 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card sm:w-72">
-      <div className="relative aspect-[4/5] w-full bg-secondary">
+      <Link href="/category/combos" className="relative block aspect-[4/5] w-full bg-secondary">
         {image ? (
           <Image src={image.url} alt={image.altText ?? product.name} fill className="object-cover" sizes="288px" />
         ) : (
@@ -239,7 +239,7 @@ function ComboDealCard({ product }: { product: Product }) {
         <span className="absolute right-3 top-3 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">
           Combo Offer
         </span>
-      </div>
+      </Link>
       <div className="p-4">
         <Link href={`/product/${product.slug}`} className="line-clamp-2 font-medium leading-snug hover:text-primary">
           {product.name}
@@ -615,7 +615,7 @@ export default function HomePage() {
               <h2 className="font-display text-2xl font-bold sm:text-3xl">Exclusive Combo Deals</h2>
             </div>
             <Button asChild size="sm" className="rounded-full">
-              <Link href="/shop?isBundle=true">
+              <Link href="/category/combos">
                 View All Combos <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
               </Link>
             </Button>

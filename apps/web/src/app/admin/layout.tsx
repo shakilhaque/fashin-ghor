@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, ShoppingBag, Package, Users, Tag, Settings, Truck, Star, BookOpen, BarChart2, ChevronRight, Clapperboard, Receipt, UserCircle, ImageIcon, FolderTree, Award } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Package, Users, Tag, Settings, Truck, Star, BookOpen, BarChart2, ChevronRight, Clapperboard, Receipt, UserCircle, ImageIcon, FolderTree, Award, Gift } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +12,7 @@ const navItems = [
   { href: '/admin/analytics', label: 'Analytics', Icon: BarChart2 },
   { href: '/admin/orders', label: 'Orders', Icon: ShoppingBag },
   { href: '/admin/products', label: 'Products', Icon: Package },
+  { href: '/admin/combos', label: 'Combos', Icon: Gift },
   { href: '/admin/categories', label: 'Categories', Icon: FolderTree },
   { href: '/admin/brands', label: 'Brands', Icon: Award },
   { href: '/admin/customers', label: 'Customers', Icon: UserCircle },

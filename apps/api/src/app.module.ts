@@ -22,6 +22,7 @@ import { StoriesModule } from './modules/stories/stories.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { MediaModule } from './modules/media/media.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
+import { CombosModule } from './modules/combos/combos.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -63,6 +64,7 @@ import { AppService } from './app.service';
     BannersModule,
     MediaModule,
     ExpensesModule,
+    CombosModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

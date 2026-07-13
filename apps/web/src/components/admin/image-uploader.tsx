@@ -65,7 +65,7 @@ export function ImageUploader({
 
       {value ? (
         <div className={cn('relative w-full overflow-hidden rounded-xl border border-border bg-secondary', aspectClass, aspect === 'auto' && 'min-h-[120px]')}>
-          <Image src={value} alt="Uploaded" fill className="object-cover" sizes="400px" />
+          <Image src={value} alt="Uploaded" fill className="object-contain" sizes="400px" />
           <button
             type="button"
             onClick={() => onChange('')}
@@ -142,7 +142,7 @@ export function MultiImageUploader({ values, onChange, folder = 'products', maxI
     <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
       {values.map((url, i) => (
         <div key={i} className="relative aspect-square overflow-hidden rounded-xl border border-border bg-secondary">
-          <Image src={url} alt={`Image ${i + 1}`} fill className="object-cover" sizes="120px" />
+          <Image src={url} alt={`Image ${i + 1}`} fill className="object-contain" sizes="120px" />
           <button
             type="button"
             onClick={() => remove(i)}

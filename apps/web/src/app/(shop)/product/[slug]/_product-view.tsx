@@ -113,7 +113,7 @@ function ReviewCard({ review }: { review: Review }) {
             <div className="mt-2 flex gap-2 flex-wrap">
               {review.images.map((url, i) => (
                 <div key={i} className="relative h-16 w-16 rounded-md overflow-hidden border border-border">
-                  <Image src={url} alt="" fill className="object-cover" sizes="64px" />
+                  <Image src={url} alt="" fill className="object-contain" sizes="64px" />
                 </div>
               ))}
             </div>
@@ -369,7 +369,7 @@ export function ProductView({ slug }: { slug: string }) {
                 src={product.images[activeImage].url}
                 alt={product.images[activeImage].altText ?? product.name}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
               />
@@ -388,7 +388,7 @@ export function ProductView({ slug }: { slug: string }) {
                     index === activeImage ? 'border-primary' : 'border-transparent',
                   )}
                 >
-                  <Image src={image.url} alt="" fill className="object-cover" sizes="64px" />
+                  <Image src={image.url} alt="" fill className="object-contain" sizes="64px" />
                 </button>
               ))}
             </div>

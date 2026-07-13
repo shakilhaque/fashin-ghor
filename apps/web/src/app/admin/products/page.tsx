@@ -249,7 +249,7 @@ export default function AdminProductsPage() {
                         <div className="flex items-center gap-3">
                           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-secondary">
                             {img ? (
-                              <Image src={img.url} alt={p.name} fill className="object-cover" sizes="40px" />
+                              <Image src={img.url} alt={p.name} fill className="object-contain" sizes="40px" />
                             ) : (
                               <div className="flex h-full items-center justify-center">
                                 <Package className="h-4 w-4 text-muted-foreground" />

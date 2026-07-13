@@ -90,7 +90,7 @@ function ProductCard({ product }: { product: Product }) {
             src={image.url}
             alt={image.altText ?? product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
@@ -169,7 +169,7 @@ function TopSellingCard({ product }: { product: Product }) {
             src={image.url}
             alt={image.altText ?? product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-contain transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
@@ -226,7 +226,7 @@ function ComboDealCard({ combo }: { combo: Combo }) {
     <div className="w-64 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-card sm:w-72">
       <Link href={`/combo/${combo.slug}`} className="relative block aspect-[4/5] w-full bg-secondary">
         {image ? (
-          <Image src={image} alt={combo.name} fill className="object-cover" sizes="288px" />
+          <Image src={image} alt={combo.name} fill className="object-contain" sizes="288px" />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
             <Gift className="h-10 w-10 opacity-20" />

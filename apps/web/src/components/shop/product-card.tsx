@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
             src={image.url}
             alt={image.altText ?? product.name}
             fill
-            className={cn('object-cover transition-transform duration-500', hovered && 'scale-105')}
+            className={cn('object-contain transition-transform duration-500', hovered && 'scale-105')}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (

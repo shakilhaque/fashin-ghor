@@ -74,7 +74,7 @@ export default function OrderConfirmationPage() {
                   <img
                     src={item.imageUrl}
                     alt={item.productName}
-                    className="h-16 w-16 rounded-lg object-cover"
+                    className="h-16 w-16 rounded-lg object-contain bg-secondary"
                   />
                 )}
                 <div className="flex-1">

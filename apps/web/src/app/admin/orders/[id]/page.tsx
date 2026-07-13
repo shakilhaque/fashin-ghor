@@ -100,7 +100,7 @@ export default function AdminOrderDetailPage() {
               {order.items.map((item) => (
                 <div key={item.id} className="flex items-start gap-4 py-4">
                   {item.imageUrl && (
-                    <img src={item.imageUrl} alt={item.productName} className="h-14 w-14 rounded-lg object-cover" />
+                    <img src={item.imageUrl} alt={item.productName} className="h-14 w-14 rounded-lg object-contain bg-secondary" />
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm">{item.productName}</p>

@@ -51,7 +51,7 @@ export function ComboView({ slug }: { slug: string }) {
       <div className="grid gap-10 lg:grid-cols-2">
         <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-secondary">
           {image ? (
-            <Image src={image} alt={combo.name} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" priority />
+            <Image src={image} alt={combo.name} fill className="object-contain" sizes="(max-width: 1024px) 100vw, 50vw" priority />
           ) : (
             <div className="flex h-full items-center justify-center text-muted-foreground">
               <Gift className="h-16 w-16 opacity-20" />
@@ -103,7 +103,7 @@ export function ComboView({ slug }: { slug: string }) {
                                 src={item.product.images[0].url}
                                 alt={item.product.images[0].altText ?? item.product.name}
                                 fill
-                                className="object-cover"
+                                className="object-contain"
                                 sizes="40px"
                               />
                             )}

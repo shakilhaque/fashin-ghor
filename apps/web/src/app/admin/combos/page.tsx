@@ -185,7 +185,7 @@ export default function AdminCombosPage() {
               <div key={c.id} className="flex items-center gap-3 p-4">
                 <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-secondary">
                   {c.imageUrl ? (
-                    <Image src={c.imageUrl} alt={c.name} fill className="object-cover" sizes="48px" />
+                    <Image src={c.imageUrl} alt={c.name} fill className="object-contain" sizes="48px" />
                   ) : (
                     <div className="flex h-full items-center justify-center">
                       <Gift className="h-4 w-4 text-muted-foreground" />

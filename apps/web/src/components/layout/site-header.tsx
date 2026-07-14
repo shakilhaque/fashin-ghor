@@ -53,12 +53,6 @@ export function SiteHeader() {
         <div className="hidden flex-1 items-center gap-1 md:flex">
           <CategoryMegaMenu />
           <Link
-            href="/shop?isOnSale=true"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
-          >
-            Offer Zone
-          </Link>
-          <Link
             href="/blog"
             className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
           >

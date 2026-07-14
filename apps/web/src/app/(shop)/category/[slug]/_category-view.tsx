@@ -94,13 +94,16 @@ export function CategoryView({ slug }: { slug: string }) {
 
   const [sortBy, sortOrder] = sortKey.split('-') as [string, string];
 
-  // "Combos" is a nav category but combo products are tagged via the isBundle
-  // flag rather than category assignment, so serve that flag here instead.
+  // "Combos" and "Offer Zone" are nav categories, but their products are
+  // tagged via the isBundle/discount flags rather than category assignment,
+  // so serve those flags here instead.
   const isCombosCategory = slug === 'combos';
+  const isOfferZoneCategory = slug === 'offer-zone';
 
   const { data: productsData, isLoading: productsLoading } = useProducts({
-    categorySlug: isCombosCategory ? undefined : slug,
+    categorySlug: isCombosCategory || isOfferZoneCategory ? undefined : slug,
     isBundle: isCombosCategory ? true : undefined,
+    isOnSale: isOfferZoneCategory ? true : undefined,
     limit: 12,
     page,
     sortBy: sortBy as 'price' | 'createdAt' | 'name' | 'rating',
